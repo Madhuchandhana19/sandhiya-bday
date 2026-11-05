@@ -1502,10 +1502,29 @@ function startRunawayYesButton() {
   yesBtn.className = "runaway-btn runaway-locked";
 
   let lastDodgeAngle = Math.random() * Math.PI * 2;
+  let dodgeCount = 0;
+
+  function unlockButton() {
+    if (runawayTimer) {
+      clearInterval(runawayTimer);
+      runawayTimer = null;
+    }
+    isRunawayActive = false;
+    yesBtn.style.position = "relative";
+    yesBtn.style.transform = "translate(0px, 0px)";
+    yesBtn.className = "runaway-btn runaway-unlocked";
+    try { playSparkleChime(); } catch (_) {}
+  }
 
   // Function to dodge here and there within the card arena (NEVER disappears!)
   function dodgeButton() {
     if (!isRunawayActive) return;
+
+    dodgeCount++;
+    if (dodgeCount >= 5) {
+      unlockButton();
+      return;
+    }
 
     const arenaRect = arena.getBoundingClientRect();
     const btnRect = yesBtn.getBoundingClientRect();
@@ -1565,21 +1584,13 @@ function startRunawayYesButton() {
     handleYesButtonClick();
   };
 
-  // Silent 20-second background timer (no countdown text or comments displayed!)
+  // Silent background timer (unlocks after 20s or 5 dodges)
   if (runawayTimer) clearInterval(runawayTimer);
   runawayTimer = setInterval(() => {
     runawaySecondsLeft--;
 
     if (runawaySecondsLeft <= 0) {
-      clearInterval(runawayTimer);
-      runawayTimer = null;
-      isRunawayActive = false;
-
-      // Smoothly return to the exact center of the arena
-      yesBtn.style.position = "relative";
-      yesBtn.style.transform = "translate(0px, 0px)";
-      yesBtn.className = "runaway-btn runaway-unlocked";
-      try { playSparkleChime(); } catch (_) {}
+      unlockButton();
     }
   }, 1000);
 }
@@ -1591,8 +1602,9 @@ function handleYesButtonClick() {
   if (isRunawayActive) return;
 
   // Cleanup Slide 5 & 6 and ensure background music is stopped
-  stopMusic();
-  stopSlide5Music();
+  try { stopMusic(); } catch (_) {}
+  try { stopSlide5Music(); } catch (_) {}
+
   if (cakeAnimFrameId) {
     cancelAnimationFrame(cakeAnimFrameId);
     cakeAnimFrameId = null;
@@ -1607,7 +1619,7 @@ function handleYesButtonClick() {
   }
 
   // Visual celebration effects
-  triggerCelebrationConfetti(120);
+  try { triggerCelebrationConfetti(120); } catch (_) {}
 
   // Transition from Slide 6 to Slide 7 (Video Final Slide)
   const slide6 = document.getElementById("slide6-kidding");
@@ -1617,10 +1629,10 @@ function handleYesButtonClick() {
   if (slide7) {
     slide7.style.display = "block";
     slide7.scrollIntoView({ behavior: "smooth" });
-    showToast("🎬 Happy 20th Birthday, Sandhiya! 👑💖");
+    try { showToast("🎬 Happy 20th Birthday, Sandhiya! 👑💖"); } catch (_) {}
 
     // Start video playback cleanly
-    startSurpriseVideo();
+    setTimeout(startSurpriseVideo, 50);
   }
 }
 
@@ -1628,37 +1640,56 @@ function handleYesButtonClick() {
  * Starts the Birthday Surprise Video Player
  */
 function startSurpriseVideo() {
-  stopMusic();
+  try { stopMusic(); } catch (_) {}
+  try { stopSlide5Music(); } catch (_) {}
+
   const video = document.getElementById("surprise-video");
   const overlay = document.getElementById("video-play-overlay");
   const tapBtn = document.getElementById("tap-to-play-video-btn");
 
   if (!video) return;
 
-  video.muted = false;
+  // Explicitly ensure video src is set
+  video.src = "video/birthday-surprise.mp4";
   video.currentTime = 0;
-  try {
-    video.load();
-  } catch (_) {}
 
-  const playPromise = video.play();
-  if (playPromise !== undefined) {
-    playPromise.then(() => {
-      if (overlay) overlay.style.display = "none";
-    }).catch(err => {
-      console.log("Autoplay with audio prevented by browser:", err);
-      if (overlay) overlay.style.display = "flex";
-    });
-  }
+  const tryPlay = () => {
+    video.muted = false;
+    const playPromise = video.play();
 
-  if (tapBtn) {
-    tapBtn.onclick = () => {
-      video.muted = false;
-      video.play().then(() => {
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
         if (overlay) overlay.style.display = "none";
-      }).catch(err => console.log("Video playback error:", err));
-    };
-  }
+      }).catch(err => {
+        console.warn("Unmuted autoplay prevented by browser policy:", err);
+        // Autoplay policy prevented unmuted audio: start playing muted immediately!
+        video.muted = true;
+        video.play().then(() => {
+          if (overlay) {
+            overlay.style.display = "flex";
+            if (tapBtn) {
+              tapBtn.innerHTML = '<span class="play-icon">🔊</span> <span class="play-label">Tap to Unmute Video 🎵</span>';
+            }
+          }
+        }).catch(err2 => {
+          console.warn("Muted playback error:", err2);
+          if (overlay) overlay.style.display = "flex";
+        });
+      });
+    }
+  };
+
+  tryPlay();
+
+  const unmuteAndPlay = () => {
+    video.muted = false;
+    video.play();
+    if (overlay) overlay.style.display = "none";
+  };
+
+  if (tapBtn) tapBtn.onclick = unmuteAndPlay;
+  if (overlay) overlay.onclick = unmuteAndPlay;
+  video.onclick = unmuteAndPlay;
 }
 
 window.handleYesButtonClick = handleYesButtonClick;
