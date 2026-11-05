@@ -43,17 +43,29 @@ const server = http.createServer((req, res) => {
     if (range) {
       const parts = range.replace(/bytes=/, '').split('-');
       const start = parseInt(parts[0], 10);
-      const end = parts[1] ? parseInt(parts[1], 10) : stats.size - 1;
+      let end = parts[1] ? parseInt(parts[1], 10) : stats.size - 1;
+
+      // Optimize chunk streaming for fast video playback and zero buffering:
+      // When browser requests open range (bytes=0-), serve in 2MB chunks so playback starts instantly
+      const CHUNK_SIZE = 1024 * 1024 * 2; // 2MB chunk
+      if (end - start + 1 > CHUNK_SIZE) {
+        end = Math.min(start + CHUNK_SIZE - 1, stats.size - 1);
+      }
       const chunksize = end - start + 1;
 
       res.writeHead(206, {
         'Content-Range': `bytes ${start}-${end}/${stats.size}`,
         'Accept-Ranges': 'bytes',
         'Content-Length': chunksize,
-        'Content-Type': contentType
+        'Content-Type': contentType,
+        'Cache-Control': 'no-cache'
       });
 
-      fs.createReadStream(filePath, { start, end }).pipe(res);
+      const stream = fs.createReadStream(filePath, { start, end });
+      req.on('close', () => {
+        stream.destroy();
+      });
+      stream.pipe(res);
     } else {
       res.writeHead(200, {
         'Content-Length': stats.size,
@@ -63,7 +75,11 @@ const server = http.createServer((req, res) => {
         'Pragma': 'no-cache',
         'Expires': '0'
       });
-      fs.createReadStream(filePath).pipe(res);
+      const stream = fs.createReadStream(filePath);
+      req.on('close', () => {
+        stream.destroy();
+      });
+      stream.pipe(res);
     }
   });
 });
@@ -71,4 +87,5 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
   console.log(`Birthday site server running at http://localhost:${PORT}/`);
 });
+
 

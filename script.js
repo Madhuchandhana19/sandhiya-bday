@@ -1486,16 +1486,58 @@ function transitionFromFortuneToKidding() {
 
 /**
  * Part 3: YES Button on "We were kidding" Slide
- * Button is unlocked and directly transitions to Slide 7 (Video Player) when clicked!
+ * Dodges smoothly inside the arena for at least 20 seconds.
+ * She cannot click it during those 20 seconds.
+ * After 20 seconds, it unlocks, returns to center, and allows clicking to Slide 7!
  */
-function startRunawayYesButton() {
+let runawayDodgeAngle = Math.random() * Math.PI * 2;
+let runawayDodgeX = 0;
+let runawayDodgeY = 0;
+
+function dodgeRunawayButton(e) {
+  if (!isRunawayActive) return;
   const arena = document.getElementById("runaway-arena");
   const yesBtn = document.getElementById("runaway-yes-btn");
-  if (!yesBtn) return;
+  if (!arena || !yesBtn) return;
 
-  // Crucial: No Happy Birthday tune on this slide!
-  stopSlide5Music();
+  if (e) {
+    try {
+      if (e.cancelable) e.preventDefault();
+      e.stopPropagation();
+    } catch (_) {}
+  }
 
+  const arenaRect = arena.getBoundingClientRect();
+  const btnRect = yesBtn.getBoundingClientRect();
+
+  // Arena safe margins: keeps the button 100% visible inside the card
+  const maxX = Math.max(45, (arenaRect.width - btnRect.width) / 2 - 16);
+  const maxY = Math.max(30, (arenaRect.height - btnRect.height) / 2 - 16);
+
+  // Jump far from current position
+  let newX = 0;
+  let newY = 0;
+  let attempts = 0;
+  do {
+    runawayDodgeAngle += Math.PI * (0.6 + Math.random() * 0.8);
+    const distFactor = 0.65 + Math.random() * 0.35;
+    newX = Math.cos(runawayDodgeAngle) * maxX * distFactor;
+    newY = Math.sin(runawayDodgeAngle) * maxY * distFactor;
+    attempts++;
+  } while (Math.hypot(newX - runawayDodgeX, newY - runawayDodgeY) < 70 && attempts < 8);
+
+  runawayDodgeX = Math.round(newX);
+  runawayDodgeY = Math.round(newY);
+
+  yesBtn.style.transform = `translate(${runawayDodgeX}px, ${runawayDodgeY}px)`;
+
+  // Subtle cute sparkle tone
+  try {
+    playChimeTone(480 + Math.random() * 220, 0.1);
+  } catch (_) {}
+}
+
+function unlockRunawayButton() {
   isRunawayActive = false;
   if (runawayTimer) {
     clearInterval(runawayTimer);
@@ -1506,12 +1548,40 @@ function startRunawayYesButton() {
     runawayPointerListener = null;
   }
 
-  // Clear any old dodge styling & listeners
-  yesBtn.onpointerenter = null;
-  yesBtn.onpointerdown = null;
-  yesBtn.ontouchstart = null;
+  const yesBtn = document.getElementById("runaway-yes-btn");
+  if (!yesBtn) return;
 
-  // Make sure the button is visibly centered and clickable!
+  // Smoothly center the button and mark as unlocked
+  runawayDodgeX = 0;
+  runawayDodgeY = 0;
+  yesBtn.style.transform = "translate(0px, 0px)";
+  yesBtn.className = "runaway-btn runaway-unlocked";
+
+  try { playSparkleChime(); } catch (_) {}
+  try { showToast("🎉 Okay okay you got it! Tap YESS!! for your grand surprise! 👑💖"); } catch (_) {}
+}
+
+function startRunawayYesButton() {
+  const arena = document.getElementById("runaway-arena");
+  const yesBtn = document.getElementById("runaway-yes-btn");
+  if (!yesBtn) return;
+
+  // Crucial: No Happy Birthday tune on this slide!
+  stopSlide5Music();
+
+  // Reset any previous state
+  isRunawayActive = true;
+  if (runawayTimer) {
+    clearInterval(runawayTimer);
+    runawayTimer = null;
+  }
+  if (runawayPointerListener) {
+    window.removeEventListener("pointermove", runawayPointerListener);
+    runawayPointerListener = null;
+  }
+
+  runawayDodgeX = 0;
+  runawayDodgeY = 0;
   yesBtn.style.position = "relative";
   yesBtn.style.left = "auto";
   yesBtn.style.top = "auto";
@@ -1521,31 +1591,54 @@ function startRunawayYesButton() {
   yesBtn.style.display = "inline-flex";
   yesBtn.style.visibility = "visible";
   yesBtn.style.opacity = "1";
-  yesBtn.className = "runaway-btn runaway-unlocked";
+  yesBtn.className = "runaway-btn runaway-locked";
 
-  // Clicking YES immediately goes to the Video Slide!
-  yesBtn.onclick = (e) => {
-    if (e) e.preventDefault();
-    handleYesButtonClick();
+  // When she hovers, touches, or clicks during the active 20 seconds, it dodges!
+  yesBtn.onpointerenter = (e) => {
+    if (isRunawayActive) dodgeRunawayButton(e);
   };
+  yesBtn.onpointerdown = (e) => {
+    if (isRunawayActive) dodgeRunawayButton(e);
+  };
+  yesBtn.ontouchstart = (e) => {
+    if (isRunawayActive) dodgeRunawayButton(e);
+  };
+
+  // Proximity dodge listener: when cursor gets close within 75px, it dodges!
+  runawayPointerListener = (e) => {
+    if (!isRunawayActive) return;
+    const rect = yesBtn.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    if (Math.hypot(e.clientX - cx, e.clientY - cy) < 75) {
+      dodgeRunawayButton(e);
+    }
+  };
+  window.addEventListener("pointermove", runawayPointerListener);
+
+  // Exactly 20 seconds timer: cannot be clicked until 20 seconds pass
+  let timeLeft = 20;
+  runawayTimer = setInterval(() => {
+    timeLeft--;
+    if (timeLeft <= 0) {
+      unlockRunawayButton();
+    }
+  }, 1000);
 }
 
 /**
  * Final Transition: YESS!! Button Click -> Slide 7 (Video Player & Grand Finale)
  */
-function handleYesButtonClick() {
-  console.log("handleYesButtonClick triggered!");
+function handleYesButtonClick(e) {
+  // If still running away (within the 20 seconds), dodge and BLOCK transition!
+  if (isRunawayActive) {
+    dodgeRunawayButton(e);
+    return false;
+  }
 
-  // Ensure runaway flags are reset
-  isRunawayActive = false;
-  if (runawayTimer) {
-    clearInterval(runawayTimer);
-    runawayTimer = null;
-  }
-  if (runawayPointerListener) {
-    window.removeEventListener("pointermove", runawayPointerListener);
-    runawayPointerListener = null;
-  }
+  console.log("handleYesButtonClick triggered - proceeding to Slide 7!");
+
+  unlockRunawayButton();
 
   // 1. FIRST PRIORITY: IMMEDIATELY SHOW SLIDE 7 AND HIDE SLIDE 6
   const slide6 = document.getElementById("slide6-kidding");
@@ -1592,6 +1685,7 @@ function handleYesButtonClick() {
 }
 
 // Expose globally to window so HTML onclick="handleYesButtonClick()" always works
+window.dodgeRunawayButton = dodgeRunawayButton;
 window.handleYesButtonClick = handleYesButtonClick;
 
 /**
@@ -1619,9 +1713,10 @@ function startSurpriseVideo() {
 
   if (!video) return;
 
-  // Explicitly ensure video src is set
-  video.src = "video/birthday-surprise.mp4";
-  video.currentTime = 0;
+  // Preserve preloaded buffer: only set src if empty
+  if (!video.getAttribute("src")) {
+    video.src = "video/birthday-surprise.mp4";
+  }
 
   if (endedOverlay) endedOverlay.style.display = "none";
 
