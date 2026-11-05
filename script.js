@@ -937,12 +937,12 @@ function playBuzzTone() {
 }
 
 // ============================================================================
-// 5. LIVE SHINY PINK & WHITE GLITTER ENGINE
+// 5. LIVE SHINY PINK & WHITE GLITTER ENGINE (HIGH PERFORMANCE)
 // ============================================================================
 const glitterCanvas = document.getElementById("glitter-canvas");
 const gCtx = glitterCanvas.getContext("2d");
 let glitterParticles = [];
-const GLITTER_COUNT = 260;
+const GLITTER_COUNT = 40; // Lightweight, silky smooth 60+ FPS
 
 function resizeGlitterCanvas() {
   glitterCanvas.width = window.innerWidth;
@@ -959,15 +959,15 @@ class GlitterParticle {
   reset(x, y) {
     this.x = x !== undefined ? x : Math.random() * glitterCanvas.width;
     this.y = y !== undefined ? y : Math.random() * glitterCanvas.height;
-    this.size = Math.random() * 4.8 + 1.6;
-    this.speedY = Math.random() * 0.65 + 0.2;
-    this.speedX = (Math.random() - 0.5) * 0.35;
-    this.alpha = Math.random() * 0.75 + 0.25;
-    this.alphaSpeed = (Math.random() * 0.025 + 0.01) * (Math.random() > 0.5 ? 1 : -1);
+    this.size = Math.random() * 3.5 + 1.5;
+    this.speedY = Math.random() * 0.45 + 0.15;
+    this.speedX = (Math.random() - 0.5) * 0.25;
+    this.alpha = Math.random() * 0.65 + 0.25;
+    this.alphaSpeed = (Math.random() * 0.02 + 0.008) * (Math.random() > 0.5 ? 1 : -1);
     this.twinklePhase = Math.random() * Math.PI * 2;
     this.colorType = Math.floor(Math.random() * 8);
     this.rotation = Math.random() * Math.PI * 2;
-    this.rotationSpeed = (Math.random() - 0.5) * 0.03;
+    this.rotationSpeed = (Math.random() - 0.5) * 0.025;
     
     const rand = Math.random();
     if (rand < 0.35) this.type = "flare"; // Radiant 8-ray diamond sparkle
@@ -980,12 +980,12 @@ class GlitterParticle {
     this.y -= this.speedY;
     this.x += this.speedX;
     this.rotation += this.rotationSpeed;
-    this.twinklePhase += 0.06;
+    this.twinklePhase += 0.05;
     
     // Dynamic twinkling pulse
     this.alpha += this.alphaSpeed;
 
-    if (this.alpha > 0.95 || this.alpha < 0.15) {
+    if (this.alpha > 0.92 || this.alpha < 0.15) {
       this.alphaSpeed = -this.alphaSpeed;
     }
 
@@ -999,31 +999,27 @@ class GlitterParticle {
     ctx.translate(this.x, this.y);
     ctx.rotate(this.rotation);
     
-    const dynamicAlpha = Math.max(0.12, Math.min(1, this.alpha + Math.sin(this.twinklePhase) * 0.35));
+    const dynamicAlpha = Math.max(0.12, Math.min(1, this.alpha + Math.sin(this.twinklePhase) * 0.3));
     ctx.globalAlpha = dynamicAlpha;
 
     // Luxurious Champagne Gold, Diamond & Electric Rose Palette
     let fill = "#ffffff";
-    if (this.colorType === 0) fill = "#ffffff"; // Diamond Brilliant White
-    else if (this.colorType === 1) fill = "#ffd700"; // 24K Champagne Gold
-    else if (this.colorType === 2) fill = "#ffe082"; // Warm Golden Starlight
-    else if (this.colorType === 3) fill = "#ff1493"; // Electric Pink
-    else if (this.colorType === 4) fill = "#ff69b4"; // Radiant Hot Pink
-    else if (this.colorType === 5) fill = "#e0aaff"; // Celestial Amethyst
-    else if (this.colorType === 6) fill = "#ff85a2"; // Rose Gold
-    else if (this.colorType === 7) fill = "#fff3e0"; // Pearlescent White
+    if (this.colorType === 0) fill = "#ffffff";
+    else if (this.colorType === 1) fill = "#ffd700";
+    else if (this.colorType === 2) fill = "#ffe082";
+    else if (this.colorType === 3) fill = "#ff1493";
+    else if (this.colorType === 4) fill = "#ff69b4";
+    else if (this.colorType === 5) fill = "#e0aaff";
+    else if (this.colorType === 6) fill = "#ff85a2";
+    else if (this.colorType === 7) fill = "#fff3e0";
 
     ctx.fillStyle = fill;
-    ctx.shadowBlur = this.size * 3.6;
-    ctx.shadowColor = fill;
 
     if (this.type === "flare") {
-      // Radiant 8-Ray Birthday Sparkler
-      const r = this.size * 3.5;
+      const r = this.size * 3.2;
       ctx.strokeStyle = fill;
-      ctx.lineWidth = 1.35;
+      ctx.lineWidth = 1.2;
       
-      // Horizontal & Vertical rays
       ctx.beginPath();
       ctx.moveTo(-r, 0);
       ctx.lineTo(r, 0);
@@ -1031,8 +1027,7 @@ class GlitterParticle {
       ctx.lineTo(0, r);
       ctx.stroke();
 
-      // Diagonal shorter rays
-      const diag = r * 0.42;
+      const diag = r * 0.4;
       ctx.beginPath();
       ctx.moveTo(-diag, -diag);
       ctx.lineTo(diag, diag);
@@ -1040,42 +1035,37 @@ class GlitterParticle {
       ctx.lineTo(diag, -diag);
       ctx.stroke();
 
-      // Glowing white diamond core
       ctx.fillStyle = "#ffffff";
       ctx.beginPath();
-      ctx.arc(0, 0, this.size * 0.75, 0, Math.PI * 2);
+      ctx.arc(0, 0, this.size * 0.7, 0, Math.PI * 2);
       ctx.fill();
     } else if (this.type === "star") {
-      // 4-Point Sparkling Star
       ctx.beginPath();
-      ctx.moveTo(0, -this.size * 2.2);
-      ctx.quadraticCurveTo(0, 0, this.size * 2.2, 0);
-      ctx.quadraticCurveTo(0, 0, 0, this.size * 2.2);
-      ctx.quadraticCurveTo(0, 0, -this.size * 2.2, 0);
-      ctx.quadraticCurveTo(0, 0, 0, -this.size * 2.2);
+      ctx.moveTo(0, -this.size * 2);
+      ctx.quadraticCurveTo(0, 0, this.size * 2, 0);
+      ctx.quadraticCurveTo(0, 0, 0, this.size * 2);
+      ctx.quadraticCurveTo(0, 0, -this.size * 2, 0);
+      ctx.quadraticCurveTo(0, 0, 0, -this.size * 2);
       ctx.fill();
 
-      // Brilliant white center
       ctx.fillStyle = "#ffffff";
       ctx.beginPath();
-      ctx.arc(0, 0, this.size * 0.55, 0, Math.PI * 2);
+      ctx.arc(0, 0, this.size * 0.5, 0, Math.PI * 2);
       ctx.fill();
     } else if (this.type === "diamond") {
-      // Shimmering Diamond Sparkle
       ctx.beginPath();
-      ctx.moveTo(0, -this.size * 1.8);
-      ctx.lineTo(this.size * 1.2, 0);
-      ctx.lineTo(0, this.size * 1.8);
-      ctx.lineTo(-this.size * 1.2, 0);
+      ctx.moveTo(0, -this.size * 1.6);
+      ctx.lineTo(this.size * 1.1, 0);
+      ctx.lineTo(0, this.size * 1.6);
+      ctx.lineTo(-this.size * 1.1, 0);
       ctx.closePath();
       ctx.fill();
 
       ctx.fillStyle = "#ffffff";
       ctx.beginPath();
-      ctx.arc(0, 0, this.size * 0.45, 0, Math.PI * 2);
+      ctx.arc(0, 0, this.size * 0.4, 0, Math.PI * 2);
       ctx.fill();
     } else {
-      // Glowing Fairy-dust Sequin
       ctx.beginPath();
       ctx.arc(0, 0, this.size, 0, Math.PI * 2);
       ctx.fill();
@@ -1088,16 +1078,6 @@ class GlitterParticle {
 for (let i = 0; i < GLITTER_COUNT; i++) {
   glitterParticles.push(new GlitterParticle());
 }
-
-// Sparkle trail following cursor on laptop
-window.addEventListener("pointermove", (e) => {
-  if (Math.random() > 0.45) {
-    glitterParticles.push(new GlitterParticle(e.clientX, e.clientY));
-    if (glitterParticles.length > GLITTER_COUNT + 40) {
-      glitterParticles.shift();
-    }
-  }
-});
 
 function animateGlitter() {
   gCtx.clearRect(0, 0, glitterCanvas.width, glitterCanvas.height);
@@ -1125,15 +1105,16 @@ const BALLOON_PALETTES = [
 
 function spawnSingleBalloon() {
   if (!balloonsContainer) return;
+  // Performance safeguard: max 3 floating balloons simultaneously
+  if (balloonsContainer.childElementCount >= 3) return;
 
   const balloon = document.createElement("div");
   balloon.className = "floating-balloon";
 
-  // Random width: 44px to 76px, height proportional
-  const width = Math.floor(Math.random() * 32 + 44);
+  const width = Math.floor(Math.random() * 28 + 44);
   const height = Math.floor(width * 1.25);
-  const leftPercent = Math.random() * 92 + 2; // Across entire width
-  const floatDuration = Math.random() * 4.5 + 8.5; // 8.5s to 13s float time
+  const leftPercent = Math.random() * 90 + 5;
+  const floatDuration = Math.random() * 4 + 9;
   const swayDuration = Math.random() * 1.5 + 2.5;
 
   const palette = BALLOON_PALETTES[Math.floor(Math.random() * BALLOON_PALETTES.length)];
@@ -1157,17 +1138,16 @@ function spawnSingleBalloon() {
     if (balloon.parentNode) {
       balloon.parentNode.removeChild(balloon);
     }
-  }, floatDuration * 1000 + 500);
+  }, floatDuration * 1000 + 400);
 }
 
 // Spawn initial staggered balloons
-setTimeout(spawnSingleBalloon, 600);
-setTimeout(spawnSingleBalloon, 2400);
-setTimeout(spawnSingleBalloon, 4600);
+setTimeout(spawnSingleBalloon, 800);
+setTimeout(spawnSingleBalloon, 4000);
 
-// Continuously release balloons from time to time
+// Continuously release balloons from time to time (spaced out for smooth performance)
 function scheduleNextBalloon() {
-  const nextDelay = Math.random() * 2200 + 2600; // Every 2.6s - 4.8s
+  const nextDelay = Math.random() * 3000 + 5000; // Every 5s - 8s
   setTimeout(() => {
     spawnSingleBalloon();
     scheduleNextBalloon();
@@ -1176,11 +1156,12 @@ function scheduleNextBalloon() {
 scheduleNextBalloon();
 
 // ============================================================================
-// 7. CONFETTI CANNON
+// 7. CONFETTI CANNON (EVENT-DRIVEN, ZERO IDLE CPU)
 // ============================================================================
 const confettiCanvas = document.getElementById("confetti-canvas");
 const cCtx = confettiCanvas.getContext("2d");
 let confettiPieces = [];
+let isConfettiLoopActive = false;
 
 function resizeConfettiCanvas() {
   confettiCanvas.width = window.innerWidth;
@@ -1195,18 +1176,18 @@ class ConfettiPiece {
   constructor(x, y) {
     this.x = x !== undefined ? x : confettiCanvas.width / 2;
     this.y = y !== undefined ? y : confettiCanvas.height / 2;
-    this.w = Math.random() * 10 + 6;
-    this.h = Math.random() * 8 + 5;
+    this.w = Math.random() * 9 + 5;
+    this.h = Math.random() * 7 + 4;
     this.color = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
-    this.speedX = (Math.random() - 0.5) * 16;
-    this.speedY = (Math.random() * -14) - 6;
-    this.gravity = 0.38;
+    this.speedX = (Math.random() - 0.5) * 14;
+    this.speedY = (Math.random() * -12) - 5;
+    this.gravity = 0.36;
     this.rotation = Math.random() * 360;
-    this.rotationSpeed = (Math.random() - 0.5) * 18;
+    this.rotationSpeed = (Math.random() - 0.5) * 16;
     this.wobble = 0;
     this.wobbleSpeed = Math.random() * 0.1 + 0.05;
     this.life = 1;
-    this.decay = Math.random() * 0.012 + 0.008;
+    this.decay = Math.random() * 0.015 + 0.01;
     this.isCircle = Math.random() > 0.6;
   }
 
@@ -1226,8 +1207,6 @@ class ConfettiPiece {
     ctx.rotate((this.rotation * Math.PI) / 180);
     ctx.globalAlpha = Math.max(0, this.life);
     ctx.fillStyle = this.color;
-    ctx.shadowBlur = 6;
-    ctx.shadowColor = this.color;
 
     if (this.isCircle) {
       ctx.beginPath();
@@ -1248,6 +1227,12 @@ function triggerCelebrationConfetti(count = 60) {
   for (let i = 0; i < count; i++) {
     confettiPieces.push(new ConfettiPiece(originX, originY));
   }
+
+  // Only run animation frame loop when confetti is actively flying
+  if (!isConfettiLoopActive) {
+    isConfettiLoopActive = true;
+    requestAnimationFrame(animateConfetti);
+  }
 }
 
 function animateConfetti() {
@@ -1263,9 +1248,13 @@ function animateConfetti() {
     }
   }
 
-  requestAnimationFrame(animateConfetti);
+  if (confettiPieces.length > 0) {
+    requestAnimationFrame(animateConfetti);
+  } else {
+    isConfettiLoopActive = false;
+    cCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+  }
 }
-animateConfetti();
 
 // ============================================================================
 // 7. TOAST NOTIFICATION
