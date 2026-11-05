@@ -455,7 +455,7 @@
           </h2>
 
           <div class="runaway-arena" id="runaway-arena">
-            <button id="runaway-yes-btn" class="runaway-btn runaway-locked" aria-label="YESS button">
+            <button id="runaway-yes-btn" class="runaway-btn runaway-unlocked" aria-label="YESS button">
               <span class="btn-text">YESS!! 💖</span>
             </button>
           </div>
@@ -475,17 +475,25 @@
 
         <!-- Celebratory Video Player (ONLY VIDEO) -->
         <div class="video-container-frame">
-          <video id="surprise-video" class="surprise-video-player" poster="images/sandhiya.jpg" controls playsinline preload="auto">
+          <video id="surprise-video" class="surprise-video-player" poster="images/sandhiya.jpg" controls controlsList="nodownload" playsinline preload="auto">
             <source src="video/birthday-surprise.mp4" type="video/mp4">
             <source src="video/surprise.mp4" type="video/mp4">
             <source src="video/video.mp4" type="video/mp4">
             <source src="video/sandhiya.mp4" type="video/mp4">
             Your browser does not support HTML5 video.
           </video>
+          <!-- Play with Sound Fallback Overlay -->
           <div id="video-play-overlay" class="video-play-overlay" style="display: none;">
             <button type="button" id="tap-to-play-video-btn" class="tap-to-play-btn">
               <span class="play-icon">▶️</span>
               <span class="play-label">Tap to Play Video with Sound 🎬🔊</span>
+            </button>
+          </div>
+          <!-- Replay Overlay (shown when video ends) -->
+          <div id="video-ended-overlay" class="video-ended-overlay" style="display: none;">
+            <button type="button" id="replay-video-btn" class="replay-video-btn">
+              <span class="replay-icon">🔁</span>
+              <span class="replay-label">Replay Video 💖</span>
             </button>
           </div>
         </div>

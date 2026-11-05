@@ -2366,19 +2366,25 @@ body {
   box-shadow: 0 14px 34px rgba(255, 20, 147, 0.45);
   cursor: pointer;
   user-select: none;
-  touch-action: none;
+  touch-action: manipulation;
   will-change: transform;
   transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
   z-index: 10;
+  animation: pulseGlow 1.2s infinite alternate;
 }
 
-.runaway-btn.runaway-locked {
-  cursor: not-allowed;
+.runaway-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 18px 45px rgba(255, 20, 147, 0.65), 0 0 25px rgba(255, 215, 0, 0.7);
 }
 
+.runaway-btn:active {
+  transform: scale(0.96);
+}
+
+.runaway-btn.runaway-locked,
 .runaway-btn.runaway-unlocked {
   cursor: pointer !important;
-  animation: pulseGlow 1.2s infinite alternate !important;
 }
 
 @keyframes pulseGlow {
@@ -2416,56 +2422,84 @@ body {
 .video-container-frame {
   position: relative;
   width: 100%;
-  max-width: 540px;
-  margin: 1.25rem auto 1.5rem;
+  max-width: 380px;
+  aspect-ratio: 480 / 848;
+  max-height: 72vh;
+  margin: 1rem auto 1.25rem;
   border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 18px 45px rgba(255, 20, 147, 0.32), 0 4px 18px rgba(255, 105, 180, 0.2);
+  box-shadow: 0 16px 45px rgba(255, 20, 147, 0.35), 0 0 35px rgba(255, 105, 180, 0.28);
   border: 3.5px solid rgba(255, 255, 255, 0.95);
-  background: #150812;
+  background: #0a0309;
 }
 
 .surprise-video-player {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: 72vh;
+  height: 100%;
   border-radius: 20px;
-  object-fit: contain;
+  object-fit: cover;
   background: #000000;
+  cursor: pointer;
 }
 
-.video-play-overlay {
+.video-play-overlay,
+.video-ended-overlay {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.42);
-  backdrop-filter: blur(4px);
-  z-index: 5;
+  background: rgba(8, 2, 8, 0.62);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 10;
+  padding: 1.5rem;
+  text-align: center;
+  transition: opacity 0.3s ease;
 }
 
-.tap-to-play-btn {
+.tap-to-play-btn,
+.replay-video-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
-  padding: 0.95rem 1.85rem;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 1.85rem;
   font-family: var(--font-heading);
-  font-size: 1.15rem;
+  font-size: 1.12rem;
   font-weight: 700;
   color: #ffffff;
   background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
   border: 2.5px solid #ffffff;
   border-radius: var(--radius-pill);
-  box-shadow: 0 10px 25px rgba(255, 20, 147, 0.5);
+  box-shadow: 0 10px 28px rgba(255, 20, 147, 0.55), 0 0 18px rgba(255, 105, 180, 0.45);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s ease;
+  animation: pulseGlowBtn 2s infinite ease-in-out;
 }
 
-.tap-to-play-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 14px 30px rgba(255, 20, 147, 0.65);
+.tap-to-play-btn:hover,
+.replay-video-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 14px 34px rgba(255, 20, 147, 0.75), 0 0 24px rgba(255, 105, 180, 0.65);
+}
+
+.tap-to-play-btn:active,
+.replay-video-btn:active {
+  transform: scale(0.98);
+}
+
+@keyframes pulseGlowBtn {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 10px 28px rgba(255, 20, 147, 0.55), 0 0 18px rgba(255, 105, 180, 0.45);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 14px 32px rgba(255, 20, 147, 0.75), 0 0 26px rgba(255, 105, 180, 0.65);
+  }
 }
 
 /* ==========================================================================

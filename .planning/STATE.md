@@ -2,8 +2,8 @@
 
 ## Current Status
 * **Milestone:** Laptop-Focused Experience Refinement
-* **Current Phase:** Phase 3 (Instant Light Switch Snap & Zero Lag) - Completed ✅
-* **Last Action:** Removed all setTimeout/transition latency from the "Turn On Light 💡" click handler so that clicking the button instantly dismisses the blackout with zero delay, restoring the bright light screen with the message, confetti, and sound immediately.
+* **Current Phase:** Phase 4 (Grand Finale Video Audio Handshake & Player Polish - Tasks 2 & 3) - Completed ✅
+* **Last Action:** Implemented bulletproof background audio pause/handshake and full unmuted video playback with custom controls, laptop-native 480:848 portrait framing, single-click play/pause, double-click fullscreen, spacebar shortcuts, and celebratory replay overlay.
 * **Next Action:** User verification
 
 ---
@@ -14,6 +14,7 @@
 | **Phase 1** | Audio & Media System Perfection | 🟢 Completed |
 | **Phase 2** | Visual Overhaul & Elevated Background Styling | 🟢 Completed |
 | **Phase 3** | Slide 2 "Lights Out" Instant Light Switch Transition | 🟢 Completed |
+| **Phase 4** | Grand Finale Video Audio Handshake & Player Polish (Tasks 2 & 3) | 🟢 Completed |
 
 ---
 
@@ -23,3 +24,4 @@
 3. **[AD-03] Desktop/Laptop Target Platform:** Confirmed target display is laptop viewports; mobile optimization scope removed to focus resources on desktop visual richness and audio fidelity.
 4. **[AD-04] Elevated Rich Background Requirement:** Restored bright, sweet strawberry-milk, champagne gold, and rose-tinted luminous pastel aesthetic per user direction.
 5. **[AD-05] Instant Light Switch Snap:** Replaced asynchronous fade/setTimeout teardowns on the "Turn On Light" button with instantaneous dismissal, providing an authentic, zero-delay light switch flip back to the bright slide.
+6. **[AD-06] Portrait Video Framing & Bulletproof Audio Handshake:** Tailored `.video-container-frame` specifically to the native `480x848` portrait aspect ratio with `max-height: 72vh`, avoiding black letterboxing on laptops. Background music is strictly silenced and reset on slide entry, while video volume is set to 100% unmuted with a pulsing fallback overlay button and replay overlay on video end.

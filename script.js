@@ -1285,6 +1285,14 @@ document.addEventListener("DOMContentLoaded", () => {
     usernameInput.focus();
   }
   resetCelebrationSlide();
+
+  const yesBtn = document.getElementById("runaway-yes-btn");
+  if (yesBtn) {
+    yesBtn.onclick = (e) => {
+      if (e) e.preventDefault();
+      handleYesButtonClick();
+    };
+  }
 });
 
 // ============================================================================
@@ -1475,121 +1483,18 @@ function transitionFromFortuneToKidding() {
 }
 
 /**
- * Part 3: Runaway YES Button Engine
- * Button is visibly centered and still inside the card, then moves here and there without disappearing!
+ * Part 3: YES Button on "We were kidding" Slide
+ * Button is unlocked and directly transitions to Slide 7 (Video Player) when clicked!
  */
 function startRunawayYesButton() {
   const arena = document.getElementById("runaway-arena");
   const yesBtn = document.getElementById("runaway-yes-btn");
-  if (!arena || !yesBtn) return;
+  if (!yesBtn) return;
 
   // Crucial: No Happy Birthday tune on this slide!
   stopSlide5Music();
 
-  isRunawayActive = true;
-  runawaySecondsLeft = 20;
-
-  // Make sure the button is visibly centered and resting in place!
-  yesBtn.style.position = "relative";
-  yesBtn.style.left = "auto";
-  yesBtn.style.top = "auto";
-  yesBtn.style.margin = "0 auto";
-  yesBtn.style.transform = "translate(0px, 0px)";
-  yesBtn.style.zIndex = "10";
-  yesBtn.style.display = "inline-flex";
-  yesBtn.style.visibility = "visible";
-  yesBtn.style.opacity = "1";
-  yesBtn.className = "runaway-btn runaway-locked";
-
-  let lastDodgeAngle = Math.random() * Math.PI * 2;
-
-  // Function to dodge here and there within the card arena (NEVER disappears!)
-  function dodgeButton() {
-    if (!isRunawayActive) return;
-
-    const arenaRect = arena.getBoundingClientRect();
-    const btnRect = yesBtn.getBoundingClientRect();
-
-    const currentW = btnRect.width || 180;
-    const currentH = btnRect.height || 60;
-
-    // Boundary limits inside the card arena
-    const maxMoveX = Math.max(35, (arenaRect.width - currentW) / 2 - 10);
-    const maxMoveY = Math.max(25, (arenaRect.height - currentH) / 2 - 10);
-
-    // Pick an angle far from previous to ensure lively "here and there" jumps
-    lastDodgeAngle += Math.PI * (0.65 + Math.random() * 0.7);
-
-    // Pick distance between 65% and 100% of max reach
-    const distFactor = 0.65 + Math.random() * 0.35;
-    const targetX = Math.cos(lastDodgeAngle) * maxMoveX * distFactor;
-    const targetY = Math.sin(lastDodgeAngle) * maxMoveY * distFactor;
-
-    yesBtn.style.position = "relative";
-    yesBtn.style.transform = `translate(${Math.round(targetX)}px, ${Math.round(targetY)}px)`;
-  }
-
-  // Dodges ONLY when she tries to click it or cursor touches it
-  yesBtn.onpointerenter = () => {
-    if (isRunawayActive) dodgeButton();
-  };
-
-  yesBtn.onpointerdown = (e) => {
-    if (isRunawayActive) {
-      e.preventDefault();
-      dodgeButton();
-    }
-  };
-
-  yesBtn.ontouchstart = (e) => {
-    if (isRunawayActive) {
-      e.preventDefault();
-      dodgeButton();
-    }
-  };
-
-  yesBtn.onclick = (e) => {
-    if (isRunawayActive) {
-      e.preventDefault();
-      dodgeButton();
-      return;
-    }
-    // Unlocked click handler: Go to Final Slide 7 & Video!
-    handleYesButtonClick();
-  };
-
-  // Silent 20-second background timer (no countdown text or comments displayed!)
-  if (runawayTimer) clearInterval(runawayTimer);
-  runawayTimer = setInterval(() => {
-    runawaySecondsLeft--;
-
-    if (runawaySecondsLeft <= 0) {
-      clearInterval(runawayTimer);
-      runawayTimer = null;
-      isRunawayActive = false;
-
-      // Smoothly return to the exact center of the arena
-      yesBtn.style.position = "relative";
-      yesBtn.style.transform = "translate(0px, 0px)";
-      yesBtn.className = "runaway-btn runaway-unlocked";
-      try { playSparkleChime(); } catch (_) {}
-    }
-  }, 1000);
-}
-
-/**
- * Final Transition: YESS!! Button Click -> Slide 7 (Video Player & Grand Finale)
- */
-function handleYesButtonClick() {
-  if (isRunawayActive) return;
-
-  // Cleanup Slide 5 & 6 and ensure background music is stopped
-  stopMusic();
-  stopSlide5Music();
-  if (cakeAnimFrameId) {
-    cancelAnimationFrame(cakeAnimFrameId);
-    cakeAnimFrameId = null;
-  }
+  isRunawayActive = false;
   if (runawayTimer) {
     clearInterval(runawayTimer);
     runawayTimer = null;
@@ -1599,8 +1504,69 @@ function handleYesButtonClick() {
     runawayPointerListener = null;
   }
 
+  // Clear any old dodge styling & listeners
+  yesBtn.onpointerenter = null;
+  yesBtn.onpointerdown = null;
+  yesBtn.ontouchstart = null;
+
+  // Make sure the button is visibly centered and clickable!
+  yesBtn.style.position = "relative";
+  yesBtn.style.left = "auto";
+  yesBtn.style.top = "auto";
+  yesBtn.style.margin = "0 auto";
+  yesBtn.style.transform = "translate(0px, 0px)";
+  yesBtn.style.zIndex = "10";
+  yesBtn.style.display = "inline-flex";
+  yesBtn.style.visibility = "visible";
+  yesBtn.style.opacity = "1";
+  yesBtn.className = "runaway-btn runaway-unlocked";
+
+  // Clicking YES immediately goes to the Video Slide!
+  yesBtn.onclick = (e) => {
+    if (e) e.preventDefault();
+    handleYesButtonClick();
+  };
+}
+
+/**
+ * Final Transition: YESS!! Button Click -> Slide 7 (Video Player & Grand Finale)
+ */
+function handleYesButtonClick() {
+  // Ensure runaway flags are reset
+  isRunawayActive = false;
+  if (runawayTimer) {
+    clearInterval(runawayTimer);
+    runawayTimer = null;
+  }
+  if (runawayPointerListener) {
+    window.removeEventListener("pointermove", runawayPointerListener);
+    runawayPointerListener = null;
+  }
+
+  // Cleanup Slide 5 & 6 and ensure background music is stopped immediately
+  try { stopMusic(); } catch (_) {}
+  if (bgAudio) {
+    try {
+      bgAudio.pause();
+      bgAudio.currentTime = 0;
+    } catch (_) {}
+  }
+  try { stopSlide5Music(); } catch (_) {}
+  try { stopSynthMusicBox(); } catch (_) {}
+
+  if (cakeAnimFrameId) {
+    cancelAnimationFrame(cakeAnimFrameId);
+    cakeAnimFrameId = null;
+  }
+
+  // Deactivate header music pill during video experience
+  if (musicBtn) {
+    musicBtn.style.opacity = "0.35";
+    musicBtn.style.pointerEvents = "none";
+  }
+
   // Visual celebration effects
-  triggerCelebrationConfetti(120);
+  try { triggerCelebrationConfetti(120); } catch (_) {}
 
   // Transition from Slide 6 to Slide 7 (Video Final Slide)
   const slide6 = document.getElementById("slide6-kidding");
@@ -1610,44 +1576,135 @@ function handleYesButtonClick() {
   if (slide7) {
     slide7.style.display = "block";
     slide7.scrollIntoView({ behavior: "smooth" });
-    showToast("🎬 Happy 20th Birthday, Sandhiya! 👑💖");
+    try { showToast("🎬 Happy 20th Birthday, Sandhiya! 👑💖"); } catch (_) {}
 
-    // Start video playback cleanly
+    // Start video playback cleanly with sound
     startSurpriseVideo();
   }
 }
 
 /**
- * Starts the Birthday Surprise Video Player
+ * Starts the Birthday Surprise Video Player with bulletproof audio handshake & enhanced controls
  */
+let isVideoControlsWired = false;
+
 function startSurpriseVideo() {
+  // 1. Fully silence background music
   stopMusic();
+  if (bgAudio) {
+    try {
+      bgAudio.pause();
+      bgAudio.currentTime = 0;
+    } catch (_) {}
+  }
+  stopSlide5Music();
+  stopSynthMusicBox();
+
   const video = document.getElementById("surprise-video");
-  const overlay = document.getElementById("video-play-overlay");
+  const playOverlay = document.getElementById("video-play-overlay");
   const tapBtn = document.getElementById("tap-to-play-video-btn");
+  const endedOverlay = document.getElementById("video-ended-overlay");
+  const replayBtn = document.getElementById("replay-video-btn");
 
   if (!video) return;
 
+  // Ensure volume is unmuted and set to full fidelity
   video.muted = false;
+  video.volume = 1.0;
   video.currentTime = 0;
 
-  const playPromise = video.play();
-  if (playPromise !== undefined) {
-    playPromise.then(() => {
-      if (overlay) overlay.style.display = "none";
-    }).catch(err => {
-      console.log("Autoplay with audio prevented by browser:", err);
-      if (overlay) overlay.style.display = "flex";
+  if (endedOverlay) endedOverlay.style.display = "none";
+
+  // 2. Wire up enhanced controls (only once)
+  if (!isVideoControlsWired) {
+    isVideoControlsWired = true;
+
+    // Single click on video toggles play/pause
+    video.addEventListener("click", () => {
+      if (video.paused) {
+        stopMusic();
+        video.muted = false;
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
+
+    // Double click to toggle fullscreen
+    video.addEventListener("dblclick", () => {
+      if (!document.fullscreenElement) {
+        if (video.requestFullscreen) video.requestFullscreen();
+        else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    });
+
+    // Sync play state: ensure bgAudio never plays over video
+    video.addEventListener("play", () => {
+      stopMusic();
+      if (playOverlay) playOverlay.style.display = "none";
+      if (endedOverlay) endedOverlay.style.display = "none";
+    });
+
+    // Handle video ended: show celebratory confetti and Replay button
+    video.addEventListener("ended", () => {
+      try { triggerCelebrationConfetti(150); } catch (_) {}
+      showToast("💖 Happy 20th Birthday, Sandhiya! 🎉");
+      if (endedOverlay) endedOverlay.style.display = "flex";
+    });
+
+    // Replay button handler
+    if (replayBtn) {
+      replayBtn.addEventListener("click", () => {
+        if (endedOverlay) endedOverlay.style.display = "none";
+        stopMusic();
+        video.currentTime = 0;
+        video.muted = false;
+        video.volume = 1.0;
+        video.play().catch(() => {});
+      });
+    }
+
+    // Fallback unmuted play button (if autoplay policy blocked sound)
+    if (tapBtn) {
+      tapBtn.addEventListener("click", () => {
+        stopMusic();
+        video.muted = false;
+        video.volume = 1.0;
+        video.play().then(() => {
+          if (playOverlay) playOverlay.style.display = "none";
+        }).catch(err => {
+          console.warn("Manual video play error:", err);
+        });
+      });
+    }
+
+    // Spacebar to pause/resume video when on Slide 7
+    window.addEventListener("keydown", (e) => {
+      const slide7 = document.getElementById("slide7-video-final");
+      if (slide7 && slide7.style.display !== "none" && e.code === "Space") {
+        if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
+        e.preventDefault();
+        if (video.paused) {
+          stopMusic();
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      }
     });
   }
 
-  if (tapBtn) {
-    tapBtn.onclick = () => {
-      video.muted = false;
-      video.play().then(() => {
-        if (overlay) overlay.style.display = "none";
-      }).catch(err => console.log("Video playback error:", err));
-    };
+  // 3. Initiate playback
+  const playPromise = video.play();
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      if (playOverlay) playOverlay.style.display = "none";
+    }).catch(err => {
+      console.warn("Autoplay with sound prevented by browser:", err);
+      if (playOverlay) playOverlay.style.display = "flex";
+    });
   }
 }
 
