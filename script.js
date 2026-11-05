@@ -1534,6 +1534,8 @@ function startRunawayYesButton() {
  * Final Transition: YESS!! Button Click -> Slide 7 (Video Player & Grand Finale)
  */
 function handleYesButtonClick() {
+  console.log("handleYesButtonClick triggered!");
+
   // Ensure runaway flags are reset
   isRunawayActive = false;
   if (runawayTimer) {
@@ -1545,7 +1547,17 @@ function handleYesButtonClick() {
     runawayPointerListener = null;
   }
 
-  // Cleanup Slide 5 & 6 and ensure background music is stopped immediately
+  // 1. FIRST PRIORITY: IMMEDIATELY SHOW SLIDE 7 AND HIDE SLIDE 6
+  const slide6 = document.getElementById("slide6-kidding");
+  const slide7 = document.getElementById("slide7-video-final");
+
+  if (slide6) slide6.style.display = "none";
+  if (slide7) {
+    slide7.style.display = "block";
+    slide7.scrollIntoView({ behavior: "smooth" });
+  }
+
+  // 2. Cleanup Slide 5 & 6 background audio
   try { stopMusic(); } catch (_) {}
   if (bgAudio) {
     try {
@@ -1569,21 +1581,18 @@ function handleYesButtonClick() {
 
   // Visual celebration effects
   try { triggerCelebrationConfetti(120); } catch (_) {}
+  try { showToast("🎬 Happy 20th Birthday, Sandhiya! 👑💖"); } catch (_) {}
 
-  // Transition from Slide 6 to Slide 7 (Video Final Slide)
-  const slide6 = document.getElementById("slide6-kidding");
-  const slide7 = document.getElementById("slide7-video-final");
-
-  if (slide6) slide6.style.display = "none";
-  if (slide7) {
-    slide7.style.display = "block";
-    slide7.scrollIntoView({ behavior: "smooth" });
-    try { showToast("🎬 Happy 20th Birthday, Sandhiya! 👑💖"); } catch (_) {}
-
-    // Start video playback cleanly with sound
+  // 3. Start video playback cleanly with sound
+  try {
     startSurpriseVideo();
+  } catch (err) {
+    console.error("Video start error:", err);
   }
 }
+
+// Expose globally to window so HTML onclick="handleYesButtonClick()" always works
+window.handleYesButtonClick = handleYesButtonClick;
 
 /**
  * Starts the Birthday Surprise Video Player with bulletproof audio handshake & enhanced controls
