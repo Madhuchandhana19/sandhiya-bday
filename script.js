@@ -319,23 +319,20 @@ function toggleCandle() {
   }
 }
 
-// "Turn On Light 💡" Button Trigger: Instantly snaps back to bright screen with message (ZERO DELAY)
+// "Turn On Light 💡" Button Trigger: Smooth, cinematic room illumination (no white rectangle flash)
 const turnOnLightBtn = document.getElementById("turn-on-light-btn");
 if (turnOnLightBtn) {
   turnOnLightBtn.addEventListener("click", () => {
-    // 1. Play light switch click sound immediately
+    // 1. Play crisp light switch click sound immediately
     playLightSwitchSound();
 
-    // 2. Instantly dismiss blackout overlay (zero lag/delay)
     const blackout = document.getElementById("blackout-overlay");
     const blackoutContent = document.getElementById("blackout-content");
-    if (blackoutContent) blackoutContent.classList.remove("is-visible");
-    if (blackout) {
-      blackout.classList.remove("is-active");
-      blackout.style.display = "none";
-    }
 
-    // 3. Immediately reveal heartfelt message on the bright card (no jittery scrolling)
+    // 2. Hide button content
+    if (blackoutContent) blackoutContent.classList.remove("is-visible");
+
+    // 3. Reveal message on the card beneath the blackout before fading
     const revealBox = document.getElementById("celebration-reveal-box");
     if (revealBox) {
       revealBox.style.display = "block";
@@ -346,7 +343,15 @@ if (turnOnLightBtn) {
       instructionSubtitle.textContent = "Lights are on & your twenties are shining bright, Queen! ✨💕";
     }
 
-    // 4. Immediate celebration audio & confetti burst
+    // 4. Smoothly fade out the black screen so the entire page and card light up together
+    if (blackout) {
+      blackout.classList.remove("is-active");
+      setTimeout(() => {
+        blackout.style.display = "none";
+      }, 260);
+    }
+
+    // 5. Immediate celebration audio & confetti burst
     playSparkleChime();
     triggerCelebrationConfetti(120);
     showToast("💡 Lights on! Happy 20th Birthday, Sandhiya! ✨❤️");
