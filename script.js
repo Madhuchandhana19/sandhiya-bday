@@ -1601,15 +1601,15 @@ let isVideoControlsWired = false;
 
 function startSurpriseVideo() {
   // 1. Fully silence background music
-  stopMusic();
+  try { stopMusic(); } catch (_) {}
   if (bgAudio) {
     try {
       bgAudio.pause();
       bgAudio.currentTime = 0;
     } catch (_) {}
   }
-  stopSlide5Music();
-  stopSynthMusicBox();
+  try { stopSlide5Music(); } catch (_) {}
+  try { stopSynthMusicBox(); } catch (_) {}
 
   const video = document.getElementById("surprise-video");
   const playOverlay = document.getElementById("video-play-overlay");
@@ -1619,9 +1619,8 @@ function startSurpriseVideo() {
 
   if (!video) return;
 
-  // Ensure volume is unmuted and set to full fidelity
-  video.muted = false;
-  video.volume = 1.0;
+  // Explicitly ensure video src is set
+  video.src = "video/birthday-surprise.mp4";
   video.currentTime = 0;
 
   if (endedOverlay) endedOverlay.style.display = "none";
@@ -1630,11 +1629,19 @@ function startSurpriseVideo() {
   if (!isVideoControlsWired) {
     isVideoControlsWired = true;
 
-    // Single click on video toggles play/pause
+    const unmuteAndPlay = () => {
+      video.muted = false;
+      video.volume = 1.0;
+      video.play().catch(() => {});
+      if (playOverlay) playOverlay.style.display = "none";
+    };
+
+    // Single click on video toggles play/pause or unmutes
     video.addEventListener("click", () => {
-      if (video.paused) {
-        stopMusic();
-        video.muted = false;
+      if (video.muted) {
+        unmuteAndPlay();
+      } else if (video.paused) {
+        try { stopMusic(); } catch (_) {}
         video.play().catch(() => {});
       } else {
         video.pause();
@@ -1653,7 +1660,7 @@ function startSurpriseVideo() {
 
     // Sync play state: ensure bgAudio never plays over video
     video.addEventListener("play", () => {
-      stopMusic();
+      try { stopMusic(); } catch (_) {}
       if (playOverlay) playOverlay.style.display = "none";
       if (endedOverlay) endedOverlay.style.display = "none";
     });
@@ -1661,7 +1668,7 @@ function startSurpriseVideo() {
     // Handle video ended: show celebratory confetti and Replay button
     video.addEventListener("ended", () => {
       try { triggerCelebrationConfetti(150); } catch (_) {}
-      showToast("💖 Happy 20th Birthday, Sandhiya! 🎉");
+      try { showToast("💖 Happy 20th Birthday, Sandhiya! 🎉"); } catch (_) {}
       if (endedOverlay) endedOverlay.style.display = "flex";
     });
 
@@ -1669,7 +1676,7 @@ function startSurpriseVideo() {
     if (replayBtn) {
       replayBtn.addEventListener("click", () => {
         if (endedOverlay) endedOverlay.style.display = "none";
-        stopMusic();
+        try { stopMusic(); } catch (_) {}
         video.currentTime = 0;
         video.muted = false;
         video.volume = 1.0;
@@ -1677,19 +1684,9 @@ function startSurpriseVideo() {
       });
     }
 
-    // Fallback unmuted play button (if autoplay policy blocked sound)
-    if (tapBtn) {
-      tapBtn.addEventListener("click", () => {
-        stopMusic();
-        video.muted = false;
-        video.volume = 1.0;
-        video.play().then(() => {
-          if (playOverlay) playOverlay.style.display = "none";
-        }).catch(err => {
-          console.warn("Manual video play error:", err);
-        });
-      });
-    }
+    // Tap to play / unmute button handler
+    if (tapBtn) tapBtn.onclick = unmuteAndPlay;
+    if (playOverlay) playOverlay.onclick = unmuteAndPlay;
 
     // Spacebar to pause/resume video when on Slide 7
     window.addEventListener("keydown", (e) => {
@@ -1698,7 +1695,7 @@ function startSurpriseVideo() {
         if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
         e.preventDefault();
         if (video.paused) {
-          stopMusic();
+          try { stopMusic(); } catch (_) {}
           video.play().catch(() => {});
         } else {
           video.pause();
@@ -1707,17 +1704,34 @@ function startSurpriseVideo() {
     });
   }
 
-  // 3. Initiate playback
+  // 3. Initiate playback (tries unmuted first, then falls back to muted with Unmute overlay)
+  video.muted = false;
+  video.volume = 1.0;
   const playPromise = video.play();
+
   if (playPromise !== undefined) {
     playPromise.then(() => {
       if (playOverlay) playOverlay.style.display = "none";
     }).catch(err => {
-      console.warn("Autoplay with sound prevented by browser:", err);
-      if (playOverlay) playOverlay.style.display = "flex";
+      console.warn("Unmuted autoplay prevented by browser policy:", err);
+      // Autoplay policy prevented unmuted audio: start playing muted immediately!
+      video.muted = true;
+      video.play().then(() => {
+        if (playOverlay) {
+          playOverlay.style.display = "flex";
+          if (tapBtn) {
+            tapBtn.innerHTML = '<span class="play-icon">🔊</span> <span class="play-label">Tap to Unmute Video 🎵</span>';
+          }
+        }
+      }).catch(err2 => {
+        console.warn("Muted playback error:", err2);
+        if (playOverlay) playOverlay.style.display = "flex";
+      });
     });
   }
 }
+
+window.handleYesButtonClick = handleYesButtonClick;
 
 // Slide 5 audio cleanups (replaced by ambient song)
 function startSlide5Music() {}
