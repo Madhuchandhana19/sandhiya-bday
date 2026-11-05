@@ -1,0 +1,17 @@
+=========================================
+BIRTHDAY SURPRISE VIDEO INSTRUCTIONS
+=========================================
+
+Place your birthday video in this folder:
+c:\Users\madhu\OneDrive\Desktop\Sandhiya bday\video\
+
+Name the video file one of the following:
+1) birthday-surprise.mp4  (Recommended)
+2) surprise.mp4
+3) video.mp4
+4) sandhiya.mp4
+
+Format: MP4 (H.264 video with AAC audio) for maximum browser compatibility across mobile and desktop.
+
+Once placed, when Sandhiya clicks the unlocked "YESS!! 💖" button on the "We were kidding" slide, the video will automatically open and play with sound!
+

@@ -1,0 +1,9 @@
+🎵 BACKGROUND MUSIC INSTRUCTIONS:
+==================================
+To play your favorite birthday song:
+1. Copy your MP3 song file into this "audio/" folder.
+2. Rename it to "birthday-song.mp3" (so the full path is audio/birthday-song.mp3).
+3. Refresh your website!
+
+Note: If no audio file is provided, the website automatically plays an adorable built-in music-box "Happy Birthday" chime when you click "Play Music"!
+

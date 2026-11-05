@@ -1,0 +1,1921 @@
+/* ==========================================================================
+   SANDHIYA'S 20TH BIRTHDAY - THEME: PINK, GLITTER & WHITE
+   Fonts: Dancing Script / Pacifico (Headings), Poppins (Body)
+   ========================================================================== */
+
+:root {
+  --color-bg-base: #fff5f8;
+  --color-bg-soft: #fff9fb;
+  --color-white: #ffffff;
+  --color-hot-pink: #ff1493;
+  --color-vibrant-pink: #ff2e93;
+  --color-deep-pink: #d81b60;
+  --color-pastel-pink: #ffd1dc;
+  --color-light-pink: #ffe4e9;
+  --color-blush: #fdf2f8;
+  --color-gold: #ffd700;
+  --color-gold-sparkle: #fff176;
+  --color-text-dark: #371b26;
+  --color-text-muted: #7c4d5d;
+  --color-text-soft: #a87284;
+  --color-border-pink: rgba(255, 105, 180, 0.35);
+
+  --font-heading: 'Pacifico', 'Dancing Script', cursive;
+  --font-script: 'Dancing Script', cursive;
+  --font-body: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --shadow-card: 0 20px 48px rgba(255, 105, 180, 0.22), 0 4px 18px rgba(255, 20, 147, 0.12);
+  --shadow-btn: 0 8px 24px rgba(255, 20, 147, 0.32);
+  --shadow-btn-hover: 0 12px 30px rgba(255, 20, 147, 0.45);
+  --radius-card: 28px;
+  --radius-pill: 9999px;
+  --radius-img: 20px;
+}
+
+/* Base Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: #ffeef6;
+  /* Live Shiny Shimmering Pink & White Animated Gradient */
+  background: linear-gradient(
+    -45deg,
+    #ffeaf3 0%,
+    #ffcde2 20%,
+    #ffffff 42%,
+    #ffb3d4 65%,
+    #fff0f7 82%,
+    #ffffff 100%
+  );
+  background-size: 320% 320%;
+  animation: liveShinyGradient 14s ease-in-out infinite alternate;
+  background-attachment: fixed;
+  color: var(--color-text-dark);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  position: relative;
+  line-height: 1.6;
+}
+
+@keyframes liveShinyGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ==========================================================================
+   CANVAS LAYERS (GLITTER & CONFETTI)
+   Glitter is kept strictly BEHIND the cards (z-index: 1) so it never
+   overlaps inputs, photo, or buttons!
+   ========================================================================== */
+#glitter-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* ==========================================================================
+   LIVE FLOATING BALLOONS (TIME-TO-TIME BIRTHDAY VIBES)
+   Strictly behind cards (z-index: 2), below .page-wrapper (z-index: 10)
+   ========================================================================== */
+.balloons-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.floating-balloon {
+  position: absolute;
+  bottom: -130px;
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+  box-shadow: 
+    inset -7px -7px 14px rgba(0, 0, 0, 0.08), 
+    inset 8px 8px 16px rgba(255, 255, 255, 0.75), 
+    0 10px 24px rgba(255, 105, 180, 0.22);
+  will-change: transform, opacity;
+  animation: floatUpBalloon linear forwards, balloonSway ease-in-out infinite alternate;
+}
+
+/* Balloon 3D Gloss / Shine Reflection */
+.floating-balloon::before {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 18%;
+  width: 25%;
+  height: 38%;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  transform: rotate(-35deg);
+}
+
+/* Balloon Knot at Base */
+.floating-balloon::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 6px;
+  background: inherit;
+  border-radius: 2px 2px 4px 4px;
+  filter: brightness(0.9);
+}
+
+/* Balloon Dangling String */
+.balloon-string {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 1.5px;
+  height: 68px;
+  background: rgba(220, 160, 185, 0.65);
+  transform: translateX(-50%);
+  transform-origin: top center;
+  animation: stringWave 2.8s ease-in-out infinite alternate;
+}
+
+@keyframes floatUpBalloon {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.92;
+  }
+  92% {
+    opacity: 0.92;
+  }
+  100% {
+    transform: translateY(-125vh);
+    opacity: 0;
+  }
+}
+
+@keyframes balloonSway {
+  0% {
+    margin-left: -18px;
+    transform: rotate(-5deg);
+  }
+  100% {
+    margin-left: 18px;
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes stringWave {
+  0% { transform: translateX(-50%) rotate(-4deg); }
+  100% { transform: translateX(-50%) rotate(4deg); }
+}
+
+/* Floating ambient symbols - kept strictly behind cards */
+.ambient-sparkles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.ambient-heart {
+  position: absolute;
+  font-size: 1.25rem;
+  opacity: 0.55;
+  filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.75));
+  animation: floatAmbient 14s infinite ease-in-out;
+}
+
+.h1 { top: 12%; left: 8%; animation-duration: 16s; animation-delay: 0s; font-size: 1.6rem; }
+.h2 { top: 25%; right: 10%; animation-duration: 18s; animation-delay: 2s; font-size: 1.3rem; }
+.h3 { top: 60%; left: 6%; animation-duration: 20s; animation-delay: 4s; font-size: 1.4rem; }
+.h4 { top: 75%; right: 8%; animation-duration: 15s; animation-delay: 1s; font-size: 1.7rem; }
+.h5 { top: 88%; left: 20%; animation-duration: 19s; animation-delay: 3s; font-size: 1.2rem; }
+.h6 { top: 40%; right: 5%; animation-duration: 17s; animation-delay: 5s; font-size: 1.5rem; }
+
+@keyframes floatAmbient {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  50% { transform: translateY(-25px) rotate(12deg) scale(1.15); }
+}
+
+/* ==========================================================================
+   TOP NAVIGATION & AUDIO CONTROLS
+   Relative positioning ensures it sits cleanly above cards without overlap!
+   ========================================================================== */
+.top-nav {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem 0.25rem;
+  max-width: 620px;
+  width: 100%;
+  margin: 0.5rem auto 0.75rem;
+}
+
+.brand-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--color-pastel-pink);
+  box-shadow: 0 4px 15px rgba(255, 105, 180, 0.15);
+}
+
+.brand-text {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-hot-pink);
+  text-transform: uppercase;
+}
+
+.sparkle-icon {
+  font-size: 0.85rem;
+  animation: pulseRotate 3s infinite ease-in-out;
+}
+
+@keyframes pulseRotate {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(25deg) scale(1.25); }
+}
+
+/* Music Toggle Button */
+.music-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.95rem;
+  background: var(--color-white);
+  border: 1.5px solid var(--color-hot-pink);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-hot-pink);
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(255, 20, 147, 0.18);
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.music-toggle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 20, 147, 0.28);
+  background: var(--color-blush);
+}
+
+.music-toggle-btn.is-playing {
+  background: linear-gradient(135deg, var(--color-hot-pink), #ff4d94);
+  color: var(--color-white);
+  border-color: transparent;
+}
+
+/* Equalizer Bars Animation */
+.music-visualizer {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  height: 14px;
+}
+
+.music-visualizer span {
+  width: 3px;
+  height: 4px;
+  background-color: currentColor;
+  border-radius: 2px;
+  transition: height 0.2s ease;
+}
+
+.music-toggle-btn.is-playing .music-visualizer span:nth-child(1) {
+  animation: eqBar 0.9s infinite ease-in-out;
+}
+.music-toggle-btn.is-playing .music-visualizer span:nth-child(2) {
+  animation: eqBar 0.6s infinite ease-in-out 0.2s;
+}
+.music-toggle-btn.is-playing .music-visualizer span:nth-child(3) {
+  animation: eqBar 0.8s infinite ease-in-out 0.4s;
+}
+
+@keyframes eqBar {
+  0%, 100% { height: 4px; }
+  50% { height: 14px; }
+}
+
+/* ==========================================================================
+   PAGE LAYOUT & CARD WRAPPER
+   ========================================================================== */
+.page-wrapper {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0.25rem 1rem 3.5rem;
+  width: 100%;
+}
+
+.content-container {
+  max-width: 620px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  z-index: 10;
+}
+
+/* ==========================================================================
+   THE GLOWING BIRTHDAY CARD BASE
+   ========================================================================== */
+.birthday-card {
+  position: relative;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius-card);
+  padding: 1.85rem 1.5rem 1.5rem;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  /* Glowing Pink Gradient Border */
+  border: 2px solid transparent;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.94)),
+    linear-gradient(135deg, #ff1493 0%, #ff85a2 35%, #ffffff 50%, #ff69b4 70%, #ff1493 100%);
+  animation: fadeInScale 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@media (min-width: 600px) {
+  .birthday-card {
+    padding: 2.25rem 2rem 1.75rem;
+  }
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Card shake animation for wrong password */
+.birthday-card.card-shake {
+  animation: shakeError 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shakeError {
+  10%, 90% { transform: translate3d(-3px, 0, 0); }
+  20%, 80% { transform: translate3d(5px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+  40%, 60% { transform: translate3d(6px, 0, 0); }
+}
+
+/* Top Subtle Gloss Highlight */
+.birthday-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   SECTION 1: AUTH / LOGIN STYLES
+   ========================================================================== */
+.auth-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.crown-badge {
+  font-size: 2.6rem;
+  margin-bottom: 0.25rem;
+  animation: floatCrown 3s ease-in-out infinite;
+  filter: drop-shadow(0 4px 10px rgba(255, 105, 180, 0.4));
+}
+
+@keyframes floatCrown {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(4deg); }
+}
+
+.auth-photo-frame {
+  position: relative;
+  max-width: 250px;
+  margin: 1.15rem auto 0.5rem;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 14px 35px rgba(255, 20, 147, 0.28), 0 4px 12px rgba(255, 105, 180, 0.2);
+  border: 4px solid var(--color-white);
+  outline: 2px solid var(--color-pastel-pink);
+  background: var(--color-light-pink);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-photo-frame:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 18px 40px rgba(255, 20, 147, 0.38);
+}
+
+.auth-queen-img {
+  display: block;
+  width: 100%;
+  height: 290px;
+  object-fit: cover;
+  object-position: center 25%;
+}
+
+@media (max-width: 480px) {
+  .auth-photo-frame {
+    max-width: 215px;
+  }
+  .auth-queen-img {
+    height: 250px;
+  }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  margin: 1.25rem 0;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  text-align: left;
+}
+
+.input-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-deep-pink);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cute-input {
+  width: 100%;
+  padding: 0.85rem 2.85rem 0.85rem 1.1rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text-dark);
+  background: #ffffff;
+  border: 2px solid var(--color-pastel-pink);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(255, 105, 180, 0.1);
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.cute-input:focus {
+  border-color: var(--color-hot-pink);
+  box-shadow: 0 0 0 4px rgba(255, 20, 147, 0.15), 0 4px 15px rgba(255, 105, 180, 0.2);
+  background: #fffdfd;
+}
+
+.cute-input.input-error {
+  border-color: #ff1493 !important;
+  background-color: #fff7fa !important;
+  box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.22) !important;
+}
+
+.field-error-msg {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #c2185b;
+  background: #fff0f5;
+  border: 1.5px solid #ffb6c1;
+  border-radius: 10px;
+  padding: 0.42rem 0.75rem;
+  margin-top: 0.45rem;
+  animation: fadeInDown 0.25s ease forwards;
+}
+
+.field-error-msg .error-dot {
+  font-size: 0.88rem;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cute-input::placeholder {
+  color: #c99ea9;
+  font-size: 0.88rem;
+}
+
+.input-sparkle {
+  position: absolute;
+  right: 14px;
+  font-size: 1.1rem;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.pwd-toggle-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.15rem;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  color: var(--color-deep-pink);
+  transition: transform 0.2s ease;
+}
+
+.pwd-toggle-btn:hover {
+  transform: scale(1.15);
+}
+
+.input-hint {
+  font-size: 0.72rem;
+  color: var(--color-text-soft);
+  padding-left: 0.35rem;
+  font-style: italic;
+}
+
+/* Error banner */
+.auth-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #fff1f2;
+  border: 1.5px solid #fecdd3;
+  border-radius: 14px;
+  color: #e11d48;
+  font-size: 0.82rem;
+  font-weight: 600;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-submit-btn {
+  width: 100%;
+  padding: 0.95rem 1.5rem;
+  font-size: 1.05rem;
+  background: linear-gradient(135deg, #ff1493 0%, #ff4081 100%);
+  color: var(--color-white);
+  box-shadow: var(--shadow-btn);
+  margin-top: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-btn-hover);
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--color-pastel-pink);
+}
+
+.auth-footer-text {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   HEADINGS & SHIMMERING TEXT
+   ========================================================================== */
+.slide-header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.slide-badge {
+  display: inline-block;
+  padding: 0.3rem 0.85rem;
+  background: linear-gradient(135deg, #ffe4ec, #ffd1dc);
+  color: var(--color-deep-pink);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: var(--radius-pill);
+  margin-bottom: 0.65rem;
+  box-shadow: 0 2px 8px rgba(255, 105, 180, 0.2);
+}
+
+.shimmer-heading {
+  font-family: var(--font-heading);
+  font-size: 1.95rem;
+  line-height: 1.25;
+  margin-bottom: 0.35rem;
+  background: linear-gradient(
+    135deg,
+    #ff1493 0%,
+    #ff69b4 25%,
+    #e91e63 45%,
+    #ff85a2 65%,
+    #ff1493 85%,
+    #ff007f 100%
+  );
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmerText 5s ease-in-out infinite;
+  text-shadow: 0 0 25px rgba(255, 105, 180, 0.2);
+}
+
+#login-heading {
+  font-family: 'Fredoka', 'Quicksand', 'Poppins', -apple-system, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+@media (min-width: 600px) {
+  .shimmer-heading {
+    font-size: 2.35rem;
+  }
+}
+
+@keyframes shimmerText {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.slide-subtitle {
+  font-family: var(--font-script);
+  font-size: 1.2rem;
+  color: var(--color-deep-pink);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   PHOTO FRAME & PORTRAIT
+   ========================================================================== */
+.photo-frame {
+  position: relative;
+  border-radius: var(--radius-img);
+  overflow: hidden;
+  background: var(--color-light-pink);
+  box-shadow: 0 14px 32px rgba(255, 105, 180, 0.28);
+  margin: 1.1rem auto 1.4rem;
+  border: 4px solid var(--color-white);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  max-width: 420px;
+}
+
+.portrait-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 480px;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.photo-caption-pill {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-deep-pink);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 182, 193, 0.7);
+}
+
+/* ==========================================================================
+   THE HEARTFELT LETTER BOX (EXACT PARAGRAPH)
+   ========================================================================== */
+.letter-box {
+  position: relative;
+  background: linear-gradient(135deg, rgba(255, 245, 248, 0.9), rgba(255, 255, 255, 0.95));
+  border: 1.5px solid var(--color-pastel-pink);
+  border-radius: 22px;
+  padding: 1.65rem 1.5rem 1.4rem;
+  margin: 1.25rem 0;
+  box-shadow: 0 8px 24px rgba(255, 105, 180, 0.12);
+}
+
+.letter-quote-mark {
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  color: var(--color-pastel-pink);
+  line-height: 0.5;
+  margin-bottom: 0.25rem;
+}
+
+.letter-quote-mark.closing-quote {
+  text-align: right;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+.letter-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+  color: var(--color-text-dark);
+  font-size: 0.94rem;
+  line-height: 1.7;
+  text-align: left;
+}
+
+.letter-lead {
+  font-family: var(--font-heading);
+  font-size: 1.45rem;
+  color: var(--color-hot-pink);
+  line-height: 1.3;
+}
+
+.letter-conclusion {
+  font-weight: 600;
+  color: var(--color-deep-pink);
+}
+
+/* ==========================================================================
+   INTERACTIVE BIRTHDAY CAKE & FLAME
+   ========================================================================== */
+.cake-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0.85rem auto 1.25rem;
+}
+
+.cake-wrapper {
+  position: relative;
+  cursor: pointer;
+  padding: 0.75rem 1rem 0.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cake-wrapper:hover {
+  transform: scale(1.05);
+}
+
+.candle-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: -4px;
+  z-index: 3;
+}
+
+.flame {
+  width: 14px;
+  height: 22px;
+  background: linear-gradient(to bottom, #fff7a0, #ff8c00, #ff2e93);
+  border-radius: 50% 50% 35% 35%;
+  box-shadow: 
+    0 0 12px #ffc107,
+    0 0 25px rgba(255, 46, 147, 0.8),
+    0 -4px 10px rgba(255, 255, 255, 0.8);
+  animation: flicker 1.2s infinite alternate ease-in-out;
+  transform-origin: center bottom;
+  transition: all 0.4s ease;
+}
+
+.flame.extinguished {
+  opacity: 0;
+  transform: scale(0.2) translateY(-10px);
+  filter: blur(4px);
+}
+
+@keyframes flicker {
+  0% { transform: rotate(-2deg) scale(1); }
+  25% { transform: rotate(3deg) scale(1.08, 0.95); }
+  50% { transform: rotate(-3deg) scale(0.95, 1.05); }
+  75% { transform: rotate(2deg) scale(1.04, 1); }
+  100% { transform: rotate(-1deg) scale(1); }
+}
+
+.smoke-puff {
+  position: absolute;
+  top: 0px;
+  font-size: 1.1rem;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.smoke-puff.rise {
+  animation: smokeRise 1.6s forwards ease-out;
+}
+
+@keyframes smokeRise {
+  0% { opacity: 0.8; transform: translateY(0) scale(0.8); }
+  100% { opacity: 0; transform: translateY(-35px) scale(1.8); }
+}
+
+.candle-wick {
+  width: 2px;
+  height: 6px;
+  background: #333;
+}
+
+.candle-body {
+  width: 10px;
+  height: 26px;
+  background: repeating-linear-gradient(
+    45deg,
+    #ff1493,
+    #ff1493 5px,
+    #ffffff 5px,
+    #ffffff 10px
+  );
+  border-radius: 3px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* 2-tier Cake */
+.cake-top-tier {
+  width: 86px;
+  height: 34px;
+  background: linear-gradient(to right, #ffd1dc, #ffffff, #ffd1dc);
+  border-radius: 12px 12px 6px 6px;
+  border: 2px solid #ff85a2;
+  border-bottom: none;
+  position: relative;
+  box-shadow: inset 0 -4px 0 #ff69b4;
+}
+
+.cake-top-tier::before {
+  content: '🍓 💖 🍓';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+}
+
+.cake-bottom-tier {
+  width: 136px;
+  height: 44px;
+  background: linear-gradient(to right, #ffb6c1, #ffe4e9, #ffb6c1);
+  border-radius: 14px 14px 10px 10px;
+  border: 2px solid #ff1493;
+  position: relative;
+  box-shadow: inset 0 -6px 0 #d81b60, 0 6px 14px rgba(255, 105, 180, 0.3);
+}
+
+.cake-bottom-tier::after {
+  content: '🌸 ✨ 🌸 ✨ 🌸';
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+}
+
+.cake-plate {
+  width: 165px;
+  height: 10px;
+  background: linear-gradient(to right, #ffffff, #fbcfe8, #ffffff);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  margin-top: -2px;
+  border: 1px solid #ffd1dc;
+}
+
+.blow-candle-btn {
+  margin-top: 0.75rem;
+  background: var(--color-white);
+  border: 1.5px solid var(--color-hot-pink);
+  color: var(--color-hot-pink);
+  padding: 0.45rem 1.1rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 20, 147, 0.15);
+  transition: all 0.25s ease;
+}
+
+.blow-candle-btn:hover {
+  background: var(--color-hot-pink);
+  color: var(--color-white);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255, 20, 147, 0.3);
+}
+
+/* ==========================================================================
+   SIGNATURE CARD
+   ========================================================================== */
+.final-signature-card {
+  margin: 1.25rem 0 1rem;
+  padding: 1.1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(255, 240, 246, 0.9), rgba(255, 255, 255, 0.95));
+  border: 1.5px dashed var(--color-hot-pink);
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(255, 105, 180, 0.14);
+}
+
+.signature-from-label {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-deep-pink);
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.signature-crew-names {
+  font-family: 'Comfortaa', 'Poppins', sans-serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--color-hot-pink);
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+}
+
+/* CTA to open game */
+.game-cta-wrapper {
+  margin-top: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.game-cta-text {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-deep-pink);
+}
+
+.rps-launch-btn {
+  background: linear-gradient(135deg, #ff1493 0%, #ff4081 100%);
+  color: var(--color-white);
+  font-size: 1rem;
+  padding: 0.85rem 1.75rem;
+}
+
+/* ==========================================================================
+   SECTION 3: ROCK PAPER SCISSORS ARENA (STRONG AI)
+   ========================================================================== */
+#game-heading {
+  font-family: 'Fredoka', 'Poppins', -apple-system, sans-serif;
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}
+.game-badge {
+  display: inline-block;
+  padding: 0.25rem 0.85rem;
+  background: #fff0f5;
+  border: 1.5px solid var(--color-pastel-pink);
+  border-radius: var(--radius-pill);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-hot-pink);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+/* Scoreboard */
+.scoreboard-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.score-card {
+  background: #ffffff;
+  padding: 0.65rem 0.5rem;
+  border-radius: 16px;
+  border: 2px solid #ffd1dc;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(255, 105, 180, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.score-card:hover {
+  transform: translateY(-2px);
+}
+
+.player-score-card { border-color: var(--color-hot-pink); }
+.ai-score-card { border-color: #8b5cf6; }
+.tie-score-card { border-color: #fbbf24; }
+
+.score-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.score-number {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  color: var(--color-deep-pink);
+  line-height: 1.2;
+}
+
+.streak-indicator {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-deep-pink);
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+/* Duel Arena: Player vs AI */
+.duel-arena {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 1rem 0;
+  gap: 0.75rem;
+}
+
+.player-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.player-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.choice-display {
+  width: 82px;
+  height: 82px;
+  border-radius: 20px;
+  background: #fff5f8;
+  border: 2px dashed #ff85a2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.35rem;
+  box-shadow: inset 0 2px 8px rgba(255, 105, 180, 0.1);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.choice-display.choice-pop {
+  animation: choicePop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border-style: solid;
+  border-color: var(--color-hot-pink);
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(255, 20, 147, 0.25);
+}
+
+@keyframes choicePop {
+  0% { transform: scale(0.6) rotate(-10deg); }
+  50% { transform: scale(1.2) rotate(6deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.choice-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-deep-pink);
+  min-height: 1.2rem;
+}
+
+.vs-badge {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: var(--color-white);
+  background: linear-gradient(135deg, #ff1493, #d81b60);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(255, 20, 147, 0.35);
+  flex-shrink: 0;
+}
+
+/* Status Banner / AI Mind-reader commentary */
+.game-status-box {
+  min-height: 56px;
+  background: #fff0f5;
+  border-radius: 16px;
+  padding: 0.65rem 1rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #ffd1dc;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.game-status-box.status-win {
+  background: #e8f5e9;
+  border-color: #81c784;
+}
+
+.game-status-box.status-loss {
+  background: #fdf2f8;
+  border-color: #f472b6;
+  animation: headShake 0.4s ease-in-out;
+}
+
+.game-status-box.status-tie {
+  background: #fffbeb;
+  border-color: #fcd34d;
+}
+
+@keyframes headShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.game-status-text {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+.game-status-box.status-win .game-status-text {
+  color: #2e7d32;
+  font-weight: 700;
+}
+
+.game-status-box.status-loss .game-status-text {
+  color: #c026d3;
+}
+
+.game-status-box.status-tie .game-status-text {
+  color: #d97706;
+}
+
+/* RPS Choice Buttons */
+.rps-choices {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.rps-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.95rem 0.5rem;
+  background: linear-gradient(135deg, #ffffff, #fff5f8);
+  border: 2px solid #ffd1dc;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(255, 105, 180, 0.12);
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.rps-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  border-color: var(--color-hot-pink);
+  box-shadow: 0 8px 22px rgba(255, 20, 147, 0.25);
+  background: #ffffff;
+}
+
+.rps-btn:active {
+  transform: translateY(2px) scale(0.96);
+}
+
+.rps-emoji {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.rps-btn-label {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-deep-pink);
+}
+
+.game-footer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--color-pastel-pink);
+}
+
+.prev-btn {
+  background: var(--color-white);
+  color: var(--color-text-muted);
+  border: 1.5px solid #ffccd5;
+}
+
+.prev-btn:hover {
+  background: #fff0f3;
+  color: var(--color-deep-pink);
+}
+
+.reset-game-btn {
+  background: #ffffff;
+  border: 1.5px solid var(--color-pastel-pink);
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  padding: 0.5rem 0.95rem;
+}
+
+.reset-game-btn:hover {
+  background: #fff5f8;
+  color: var(--color-hot-pink);
+  border-color: var(--color-hot-pink);
+}
+
+/* ==========================================================================
+   BUTTONS BASE & NAVIGATION
+   ========================================================================== */
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.7rem 1.35rem;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  border: none;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.next-game-btn {
+  background: linear-gradient(135deg, #ff1493 0%, #ff4081 100%);
+  color: var(--color-white);
+  box-shadow: var(--shadow-btn);
+}
+
+.next-game-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: var(--shadow-btn-hover);
+}
+
+/* ==========================================================================
+   FOOTER SIGNATURE BAR
+   ========================================================================== */
+.signature-bar {
+  text-align: center;
+  padding: 0.5rem 1rem;
+}
+
+.signature-text {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.names-highlight {
+  color: var(--color-deep-pink);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   TOAST NOTIFICATION
+   ========================================================================== */
+.toast-notification {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: rgba(30, 10, 20, 0.92);
+  color: var(--color-white);
+  padding: 0.65rem 1.35rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--color-hot-pink);
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 1100;
+  text-align: center;
+  max-width: 90vw;
+}
+
+.toast-notification.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ==========================================================================
+   SLIDE 4: PINK BALLOONS & CAKE 3D THEME (PINKISH-WHITE & CURSIVE)
+   ========================================================================== */
+.burnt-card-wrapper {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.vintage-scrapbook-letter {
+  position: relative;
+  /* Dreamy Pinkish-White translucent backdrop over the 3D balloons background */
+  background: linear-gradient(135deg, rgba(255, 248, 251, 0.93) 0%, rgba(255, 238, 245, 0.95) 100%), 
+              url('images/slide4-bg.jpg') no-repeat center top / cover;
+  background-color: #fff0f5;
+  border-radius: 28px;
+  padding: 2.5rem 1.85rem;
+  margin: 0.5rem auto 1.25rem;
+  box-shadow: 0 20px 48px rgba(255, 105, 180, 0.22), 0 4px 18px rgba(255, 20, 147, 0.08);
+  border: 2px solid rgba(255, 222, 234, 0.95);
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+@media (min-width: 600px) {
+  .vintage-scrapbook-letter {
+    padding: 3.2rem 2.5rem;
+  }
+}
+
+@media (max-width: 440px) {
+  .vintage-scrapbook-letter {
+    padding: 2rem 1.25rem;
+    border-radius: 22px;
+  }
+}
+
+.vintage-letter-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  font-family: 'Dancing Script', 'Caveat', cursive;
+  font-size: 1.32rem;
+  font-weight: 700;
+  line-height: 1.88;
+  color: #4a1528;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+  letter-spacing: 0.02em;
+  text-align: left;
+}
+
+.vintage-letter-content p {
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
+}
+
+@media (max-width: 440px) {
+  .vintage-letter-content {
+    font-size: 1.18rem;
+    line-height: 1.8;
+    gap: 1.15rem;
+  }
+}
+
+.final-surprise-trigger-btn {
+  background: linear-gradient(135deg, #ff1493 0%, #ff69b4 50%, #d81b60 100%);
+  font-size: 1.05rem;
+  padding: 0.9rem 1.85rem;
+  box-shadow: 0 10px 28px rgba(255, 20, 147, 0.35);
+}
+
+.final-surprise-trigger-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 14px 34px rgba(255, 20, 147, 0.45);
+}
+
+/* ==========================================================================
+   SLIDE 5: 3D CAKE & RUNAWAY YES BUTTON STYLES
+   ========================================================================== */
+.slide5-card {
+  padding-bottom: 2.5rem;
+}
+
+.cute-script-heading {
+  font-family: 'Dancing Script', 'Caveat', cursive !important;
+  font-size: 2.35rem !important;
+  letter-spacing: 0.02em;
+}
+
+@media (min-width: 600px) {
+  .cute-script-heading {
+    font-size: 2.85rem !important;
+  }
+}
+
+.slide5-audio-bar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.15rem;
+}
+
+.slide5-music-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.15rem;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1.5px solid var(--color-pastel-pink);
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-deep-pink);
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(255, 105, 180, 0.18);
+  transition: all 0.25s ease;
+}
+
+.slide5-music-pill:hover {
+  transform: translateY(-2px);
+  background: #fff0f6;
+  box-shadow: 0 6px 18px rgba(255, 20, 147, 0.25);
+}
+
+.slide5-music-pill.is-muted {
+  opacity: 0.7;
+  border-color: #ddd;
+  color: #777;
+}
+
+/* 3D Cake Viewport & Knife Stage */
+.cake3d-stage-wrapper {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cake3d-instructions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 1.15rem;
+  background: #fff2f7;
+  border-radius: var(--radius-pill);
+  border: 1.5px dashed var(--color-pastel-pink);
+  margin-bottom: 0.85rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #b82565;
+  box-shadow: 0 2px 10px rgba(255, 105, 180, 0.1);
+}
+
+.cake3d-viewport-container {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  border-radius: 26px;
+  background: radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.98) 0%, rgba(255, 242, 248, 0.88) 75%, rgba(255, 228, 240, 0.95) 100%);
+  border: 2px solid rgba(255, 205, 225, 0.85);
+  box-shadow: inset 0 4px 20px rgba(255, 105, 180, 0.12), 0 14px 35px rgba(255, 105, 180, 0.18);
+  overflow: hidden;
+  touch-action: none;
+}
+
+@media (max-width: 440px) {
+  .cake3d-viewport-container {
+    height: 360px;
+  }
+}
+
+#cake3d-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  outline: none;
+}
+
+/* Interactive Pink Cake Knife */
+.interactive-knife {
+  position: absolute;
+  right: 28px;
+  top: 35px;
+  width: 46px;
+  height: 165px;
+  z-index: 25;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  filter: drop-shadow(0 10px 20px rgba(255, 20, 147, 0.35));
+  transition: transform 0.08s ease-out;
+  animation: knifeIdleFloat 3s infinite ease-in-out;
+}
+
+.interactive-knife.is-dragging {
+  cursor: grabbing;
+  animation: none !important;
+  transition: none !important;
+  filter: drop-shadow(0 14px 26px rgba(255, 20, 147, 0.5));
+}
+
+@keyframes knifeIdleFloat {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+.knife-blade {
+  width: 20px;
+  height: 98px;
+  background: linear-gradient(135deg, #ffe0ec 0%, #ffffff 42%, #ff9ebb 75%, #ff5c8a 100%);
+  clip-path: polygon(100% 0, 80% 86%, 40% 100%, 0 94%, 0 0);
+  border-radius: 0 0 4px 0;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  border-right: 1.5px solid rgba(255, 255, 255, 0.95);
+}
+
+.blade-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.85) 50%, transparent 100%);
+  animation: knifeBladeShimmer 2.5s infinite;
+}
+
+@keyframes knifeBladeShimmer {
+  0% { transform: translateX(-100%); }
+  50%, 100% { transform: translateX(100%); }
+}
+
+.knife-guard {
+  width: 40px;
+  height: 8px;
+  background: linear-gradient(135deg, #ffd700, #fff4b8, #e5a900);
+  border-radius: 4px;
+  margin: 0 auto;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.knife-handle {
+  width: 18px;
+  height: 58px;
+  background: linear-gradient(135deg, #ff1493 0%, #ff4081 50%, #d81b60 100%);
+  border-radius: 4px 4px 8px 8px;
+  margin: 0 auto;
+  position: relative;
+  box-shadow: inset -2px -2px 6px rgba(0, 0, 0, 0.25), inset 2px 2px 6px rgba(255, 255, 255, 0.45);
+}
+
+.handle-grip-ribs {
+  position: absolute;
+  top: 10px;
+  left: 3px;
+  right: 3px;
+  height: 36px;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 4px,
+    rgba(255, 255, 255, 0.35) 4px,
+    rgba(255, 255, 255, 0.35) 7px
+  );
+}
+
+.knife-pommel {
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.2rem;
+  filter: drop-shadow(0 2px 4px rgba(255, 105, 180, 0.5));
+}
+
+.cut-guide-line {
+  position: absolute;
+  top: 15%;
+  bottom: 22%;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  border-left: 2px dashed rgba(255, 20, 147, 0.45);
+  pointer-events: none;
+  opacity: 0.65;
+  transition: opacity 0.3s;
+}
+
+/* Part 2: Scroll Down & "I was kidding" Button */
+.slide5-part2-section {
+  margin-top: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  animation: fadeInDown 0.5s ease forwards;
+}
+
+.scroll-down-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #d81b60;
+  letter-spacing: 0.02em;
+}
+
+.bounce-arrow {
+  font-size: 1.85rem;
+  animation: arrowBounce 1.4s infinite ease-in-out;
+}
+
+@keyframes arrowBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(9px); }
+}
+
+.kidding-cta-wrapper {
+  margin-top: 0.5rem;
+}
+
+.kidding-btn {
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  padding: 1rem 2.2rem !important;
+  background: linear-gradient(135deg, #ff1493 0%, #ff69b4 50%, #ff1493 100%) !important;
+  color: #ffffff !important;
+  border-radius: var(--radius-pill) !important;
+  box-shadow: 0 10px 28px rgba(255, 20, 147, 0.4) !important;
+  border: 2px solid rgba(255, 255, 255, 0.85) !important;
+  cursor: pointer;
+  animation: gentleBounce 2.5s infinite ease-in-out;
+}
+
+@keyframes gentleBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04) translateY(-3px); box-shadow: 0 14px 34px rgba(255, 20, 147, 0.52); }
+}
+
+/* Part 3: "Are you eager?" & Runaway Button */
+.slide5-part3-section {
+  margin-top: 2.25rem;
+  padding-top: 1.85rem;
+  border-top: 2px dashed rgba(255, 182, 193, 0.7);
+  text-align: center;
+  animation: fadeInDown 0.5s ease forwards;
+}
+
+.eager-heading {
+  font-family: 'Fredoka', 'Quicksand', 'Poppins', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #ff1493;
+  margin-bottom: 0.45rem;
+  text-shadow: 0 2px 10px rgba(255, 105, 180, 0.2);
+}
+
+.runaway-hint {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #b82565;
+  margin-bottom: 1.35rem;
+  min-height: 1.8rem;
+  transition: all 0.2s ease;
+}
+
+.runaway-arena {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1.25rem 0 0.5rem;
+  overflow: visible !important;
+}
+
+.runaway-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 3.2rem;
+  font-size: 1.45rem;
+  font-weight: 800;
+  font-family: 'Fredoka', 'Poppins', sans-serif;
+  color: #ffffff;
+  background: linear-gradient(135deg, #ff1493 0%, #ff4081 50%, #ff1493 100%);
+  border-radius: var(--radius-pill);
+  border: 3.5px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 14px 34px rgba(255, 20, 147, 0.45);
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+  will-change: transform;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+  z-index: 10;
+}
+
+.runaway-btn.runaway-locked {
+  cursor: not-allowed;
+}
+
+.runaway-btn.runaway-unlocked {
+  cursor: pointer !important;
+  animation: pulseGlow 1.2s infinite alternate !important;
+}
+
+@keyframes pulseGlow {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 10px 28px rgba(255, 20, 147, 0.4), 0 0 15px rgba(255, 215, 0, 0.5);
+  }
+  100% {
+    transform: scale(1.06);
+    box-shadow: 0 18px 45px rgba(255, 20, 147, 0.6), 0 0 30px rgba(255, 215, 0, 0.85);
+  }
+}
+
+/* ==========================================================================
+   SLIDE 6 (KIDDING) & SLIDE 7 (SURPRISE VIDEO PLAYER)
+   ========================================================================== */
+.slide6-kidding-card {
+  padding: 2.8rem 2rem 2.2rem;
+  text-align: center;
+  min-height: 440px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: visible !important;
+}
+
+.slide-video-only-card {
+  padding: 1.85rem 1.35rem 2rem;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+.video-container-frame {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  margin: 1.25rem auto 1.5rem;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 18px 45px rgba(255, 20, 147, 0.32), 0 4px 18px rgba(255, 105, 180, 0.2);
+  border: 3.5px solid rgba(255, 255, 255, 0.95);
+  background: #150812;
+}
+
+.surprise-video-player {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 72vh;
+  border-radius: 20px;
+  object-fit: contain;
+  background: #000000;
+}
+
+.video-play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(4px);
+  z-index: 5;
+}
+
+.tap-to-play-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.95rem 1.85rem;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
+  border: 2.5px solid #ffffff;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 10px 25px rgba(255, 20, 147, 0.5);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tap-to-play-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 14px 30px rgba(255, 20, 147, 0.65);
+}
+
+/* ==========================================================================
+   MOBILE & RESPONSIVE TWEAKS
+   ========================================================================== */
+@media (max-width: 420px) {
+  .shimmer-heading {
+    font-size: 1.7rem;
+  }
+  .slide-subtitle {
+    font-size: 1.05rem;
+  }
+  .birthday-card {
+    padding: 1.5rem 1.15rem 1.25rem;
+  }
+  .choice-display {
+    width: 68px;
+    height: 68px;
+    font-size: 1.9rem;
+  }
+  .letter-content {
+    font-size: 0.88rem;
+  }
+}

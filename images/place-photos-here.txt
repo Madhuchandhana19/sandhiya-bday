@@ -1,0 +1,15 @@
+📸 PHOTO INSTRUCTIONS:
+==================================
+To add your real photos for Sandhiya:
+Simply replace the placeholder images in this folder with your own photos keeping the exact same names:
+
+1. photo1.jpg   -> Slide 1 (Welcome / Queen of the Day photo)
+2. photo2.jpg   -> Slide 2 (Where It All Began photo)
+3. memory1.jpg  -> Slide 3 (Memory 1 photo)
+4. memory2.jpg  -> Slide 3 (Memory 2 photo)
+5. memory3.jpg  -> Slide 3 (Memory 3 photo)
+6. photo4.jpg   -> Slide 4 (Things We Love About You photo)
+7. photo5.jpg   -> Slide 5 (Make a Wish / Final Celebration photo)
+
+Tip: Any standard image format (.jpg, .jpeg, .png) will work. If your images have a different extension (like .png), just update the file name in script.js under SLIDES data at the top!
+

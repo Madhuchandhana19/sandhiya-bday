@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Happy 20th Birthday, Sandhiya! 🎉💖</title>
+  <meta name="description"
+    content="A magical 20th birthday celebration website for Sandhiya from Madhu Chandhana, Rithika Sri, and Srinithi.">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👑</text></svg>">
+
+  <!-- Google Fonts: Pacifico, Dancing Script, Fredoka, Comfortaa, Poppins, Quicksand, Caveat, EB Garamond -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Comfortaa:wght@600;700&family=Dancing+Script:wght@500;600;700&family=EB+Garamond:ital,wght@0,500;1,500&family=Fredoka:wght@600;700&family=Pacifico&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Quicksand:wght@500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Floating Glitter Canvas Background -->
+  <canvas id="glitter-canvas"></canvas>
+
+  <!-- Confetti Canvas for Celebratory Bursts -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Floating Ambient Hearts & Sparkles -->
+  <div class="ambient-sparkles" aria-hidden="true">
+    <span class="ambient-heart h1">💖</span>
+    <span class="ambient-heart h2">✨</span>
+    <span class="ambient-heart h3">🌸</span>
+    <span class="ambient-heart h4">💕</span>
+    <span class="ambient-heart h5">⭐</span>
+    <span class="ambient-heart h6">🎀</span>
+  </div>
+
+  <!-- Live Floating Balloons Layer (spawns from time to time) -->
+  <div id="balloons-container" class="balloons-layer" aria-hidden="true"></div>
+
+  <!-- Top Floating Controls: Brand & Music -->
+  <header class="top-nav">
+    <div class="brand-pill">
+      <span class="sparkle-icon">✨</span>
+      <span class="brand-text">SANDHIYA'S 20TH BDAYYY</span>
+      <span class="sparkle-icon">✨</span>
+    </div>
+
+    <button id="music-btn" class="music-toggle-btn" aria-label="Toggle background music"
+      title="Toggle background music">
+      <span class="music-icon" id="music-icon">🎵</span>
+      <span class="music-label" id="music-label">Play Audio</span>
+      <span class="music-visualizer" id="music-visualizer">
+        <span></span><span></span><span></span>
+      </span>
+    </button>
+  </header>
+
+  <!-- HTML5 Audio Element -->
+  <audio id="bg-audio" src="audio/birthday-song.mp3" preload="auto" loop></audio>
+
+  <!-- Main Content Wrapper -->
+  <main class="page-wrapper">
+    <div class="content-container">
+
+      <!-- =================================================================== -->
+      <!-- SECTION 1: ROYAL VIP GATEKEEPER / LOGIN SCREEN -->
+      <!-- =================================================================== -->
+      <section id="login-section" class="birthday-card auth-card" role="region" aria-labelledby="login-heading">
+        <div class="auth-header">
+          <div class="crown-badge">👑</div>
+          <span class="slide-badge">VIP BIRTHDAY ACCESS</span>
+          <h1 id="login-heading" class="shimmer-heading">Hey Birthday Girl! ✨</h1>
+
+          <!-- Her Photo Attached Right Below 'Hey Birthday Girl!' -->
+          <div class="auth-photo-frame">
+            <img src="images/sandhiya.jpg" alt="Birthday Girl Sandhiya" class="auth-queen-img">
+          </div>
+        </div>
+
+        <form id="login-form" class="auth-form" autocomplete="off" onsubmit="return false;">
+          <!-- Username Input -->
+          <div class="input-group">
+            <label for="username-input" class="input-label">
+              <span class="label-icon">👤</span> Username
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="username-input" class="cute-input" placeholder="Enter username"
+                autocapitalize="none" spellcheck="false">
+              <span class="input-sparkle">💖</span>
+            </div>
+            <!-- Dedicated Username Error Message -->
+            <div id="username-error" class="field-error-msg" style="display: none;" role="alert">
+              <span class="error-dot">⚠️</span> Username mismatched
+            </div>
+          </div>
+
+          <!-- Password Input -->
+          <div class="input-group">
+            <label for="password-input" class="input-label">
+              <span class="label-icon">🔒</span> Secret Passcode
+            </label>
+            <div class="input-wrapper">
+              <input type="password" id="password-input" class="cute-input" placeholder="Enter secret passcode"
+                autocomplete="off">
+              <button type="button" id="toggle-pwd-btn" class="pwd-toggle-btn" aria-label="Toggle password visibility">
+                👁️
+              </button>
+            </div>
+            <!-- Dedicated Passcode Error Message -->
+            <div id="passcode-error" class="field-error-msg" style="display: none;" role="alert">
+              <span class="error-dot">⚠️</span> Passcode mismatched
+            </div>
+            <p class="input-hint">Hint: Your special date (DDMMYY) ✨</p>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="button" id="login-submit-btn" class="nav-btn auth-submit-btn" onclick="handleLoginAttempt()">
+            <span class="btn-text">Get Ready</span>
+            <span class="btn-icon">✨</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- SECTION 2: THE BIRTHDAY CELEBRATION & HEARTFELT MESSAGE -->
+      <!-- (Revealed ONLY after successful login) -->
+      <!-- =================================================================== -->
+      <section id="celebration-section" class="birthday-card celebration-card" style="display: none;" role="region"
+        aria-label="Birthday Message">
+
+        <!-- Interactive Candle & Birthday Cake -->
+        <div class="cake-stage">
+          <div class="cake-wrapper" id="cake-interactive" title="Tap the candle to make your wish!">
+            <div class="candle-container">
+              <div class="flame" id="candle-flame"></div>
+              <div class="smoke-puff" id="smoke-puff">💨</div>
+              <div class="candle-wick"></div>
+              <div class="candle-body"></div>
+            </div>
+            <div class="cake-top-tier"></div>
+            <div class="cake-bottom-tier"></div>
+            <div class="cake-plate"></div>
+          </div>
+          <button class="blow-candle-btn" id="blow-btn">
+            Blow Out Candle 💨
+          </button>
+        </div>
+
+        <!-- The Exact Heartfelt Paragraph -->
+        <div class="letter-box">
+          <div class="letter-quote-mark">“</div>
+          <div class="letter-content">
+            <p class="letter-lead">Happy 20th birthday! ❤️</p>
+            <p>
+              I hope this new chapter of your life brings you endless happiness, beautiful memories, unexpected
+              opportunities, and everything your heart has been wishing for. It’s crazy how quickly time flies, and here
+              you are, stepping into a whole new decade of life.
+            </p>
+            <p>
+              May you never lose the little things that make you who you are, never stop dreaming big, and always find
+              the courage to chase everything you deserve. I hope life surprises you in the most beautiful ways, that
+              you meet people who genuinely value you, experience moments that make your heart full, and find peace even
+              on the difficult days.
+            </p>
+            <p>
+              May every setback teach you something, every little achievement make you proud, and every new day give you
+              another reason to smile. Never feel pressured to have everything figured out; you’re allowed to make
+              mistakes, change paths, grow, and become a different version of yourself along the way.
+            </p>
+            <p class="letter-conclusion">
+              Here’s to twenty years of memories and a lifetime of beautiful moments waiting ahead. Wishing you nothing
+              but love, success, good health, and all the happiness in the world. Have the most wonderful 20th birthday!
+              🥹❤️
+            </p>
+          </div>
+          <div class="letter-quote-mark closing-quote">”</div>
+        </div>
+
+        <!-- Transition to Rock Paper Scissors Game -->
+        <div class="game-cta-wrapper">
+          <button id="open-game-btn" class="nav-btn next-game-btn rps-launch-btn">
+            <span class="btn-text">Ready for the next slide?</span>
+            <span class="btn-icon">🎮✨</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- SECTION 3: ROCK PAPER SCISSORS GAME -->
+      <!-- =================================================================== -->
+      <section id="game-section" class="birthday-card game-card" style="display: none;" role="region"
+        aria-labelledby="game-heading">
+        <header class="slide-header">
+          <h2 id="game-heading" class="shimmer-heading">Win to see the next slide</h2>
+        </header>
+
+        <!-- Duel Battle Arena -->
+        <div class="duel-arena">
+          <!-- Player Choice Box -->
+          <div class="player-box">
+            <div class="player-badge">You</div>
+            <div class="choice-display player-choice" id="player-choice-display">❓</div>
+            <div class="choice-name" id="player-choice-name">Your Move</div>
+          </div>
+
+          <div class="vs-badge">VS</div>
+
+          <!-- AI Choice Box -->
+          <div class="player-box">
+            <div class="player-badge">Bot</div>
+            <div class="choice-display computer-choice" id="computer-choice-display">❓</div>
+            <div class="choice-name" id="computer-choice-name">Bot Move</div>
+          </div>
+        </div>
+
+        <!-- Status / Result Banner -->
+        <div class="game-status-box" id="game-status-box">
+          <p class="game-status-text" id="game-status-text">
+            Choose Rock, Paper, or Scissors! 💖
+          </p>
+        </div>
+
+        <!-- Action Buttons: Rock, Paper, Scissors -->
+        <div class="rps-choices" id="rps-buttons-group">
+          <button class="rps-btn" data-choice="rock" aria-label="Rock">
+            <span class="rps-emoji">✊</span>
+            <span class="rps-btn-label">Rock</span>
+          </button>
+          <button class="rps-btn" data-choice="paper" aria-label="Paper">
+            <span class="rps-emoji">✋</span>
+            <span class="rps-btn-label">Paper</span>
+          </button>
+          <button class="rps-btn" data-choice="scissors" aria-label="Scissors">
+            <span class="rps-emoji">✌️</span>
+            <span class="rps-btn-label">Scissors</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- SECTION 4: VINTAGE SCRAPBOOK LETTER THEME -->
+      <!-- (Unlocked after winning Rock Paper Scissors) -->
+      <!-- =================================================================== -->
+      <section id="burnt-letter-section" class="birthday-card burnt-card-wrapper" style="display: none;" role="region"
+        aria-label="A Special Letter For Sandhiya">
+
+        <!-- Content directly on the vintage scrapbook parchment background -->
+        <article class="vintage-scrapbook-letter">
+          <div class="vintage-letter-content">
+            <p>
+              Happy Birthday, Sandhiya💗 Wishing you the happiest birthday and an even happier life ahead. Always
+              remember that we will be there for you, no matter what. Whatever obstacles life throws at you, we will
+              face
+              them together. You have such a special sense of empathy, and I hope you never lose that beautiful quality
+              in you. Always stay the way you are. Also, you may never accept the fact that a nurse dropped you as a
+              baby in the hospital, but we all know the truth, and there’s no escaping it! 😂 We may fight with you,
+              scold you, and annoy you from time to time, but just know that everything comes from a place of love and
+              is always for your good. Honestly, we don’t know what good karma you did to deserve us, but one thing is
+              for sure: you’re extremely lucky to have us, and well, maybe it’s vice versa too.
+            </p>
+
+            <p>
+              And, look how far we’ve come! From being just Rithika’s classmate to becoming someone who is now an
+              inseparable part of our little gang and our roommate, we’ve come a long way. You used to secretly enter
+              B1-007 without anyone knowing, and somehow, by your second year we became roommates and you ended up
+              becoming our roommate in the PG during our third year too. Little did we know that we’d get this attached
+              to you, but somehow, here we are. What started as three somehow became four, and honestly, it’s always
+              been us four ever since. From being an extreme introvert to slowly coming out of your shell (although
+              there’s still a long way to go 😂), you’ve definitely levelled up a little. And you better be thankful to
+              us for that, okay? LOL.
+            </p>
+
+            <p>
+              And please, never stop putting loops with your hands during our exam days, and never stop being
+              unnecessarily nervous about our exams either. 😂 Honestly, it’s so much fun watching you panic sometimes.
+              Maybe you really are our little stressbuster in your own way! Also, we will be always here to teach you
+              about 18+ jokes (I mean, if it isn’t us, then who will? 😭). But jokes apart, always remember that no
+              matter what you do, what you say, or how silly things might get, we will never judge you. You can always
+              be your unfiltered, weird, chaotic self around us. You’ll never have to pretend to be someone else. No
+              matter what happens, you’ll always be loved, accepted, and cherished by us. ❤️
+            </p>
+
+            <p>
+              Jokes apart, we’re genuinely so glad you became a part of our lives. Here’s to more fights, endless
+              conversations, stupid jokes, late-night talks, unforgettable memories, and all the chaos that comes with
+              being us. No matter where life takes us, you’ll always have us by your side. Stay happy, stay kind, keep
+              being your empathetic self, and never forget how loved you are. Happy Birthday once again, girl! ❤️
+            </p>
+          </div>
+        </article>
+
+        <!-- Button to go to final surprise -->
+        <div class="game-cta-wrapper" style="margin-top: 1.25rem;">
+          <button id="final-surprise-btn" class="nav-btn next-game-btn final-surprise-trigger-btn">
+            <span class="btn-text">Ready for your final surprise?</span>
+            <span class="btn-icon">✨🎁</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- SECTION 5: READY FOR YOUR FINAL SURPRISE? (3D CAKE & RUNAWAY YES BUTTON) -->
+      <!-- =================================================================== -->
+      <section id="slide5-surprise" class="birthday-card slide5-card" style="display: none;" role="region" aria-labelledby="slide5-heading">
+        
+        <!-- Header -->
+        <header class="slide-header">
+          <span class="slide-badge">🎂 THE ULTIMATE SURPRISE</span>
+          <h2 id="slide5-heading" class="shimmer-heading cute-script-heading">Ready for your final surprise 🎂</h2>
+          <p class="slide-subtitle">A special sweet moment just for you, Queen 💕</p>
+        </header>
+
+        <!-- Slide 5 Audio Toggle Bar -->
+        <div class="slide5-audio-bar">
+          <button id="slide5-music-btn" class="slide5-music-pill" aria-label="Toggle Happy Birthday melody">
+            <span class="music-note-icon">🎵</span>
+            <span id="slide5-music-status">Happy Birthday Tune: Playing 🎶</span>
+          </button>
+        </div>
+
+        <!-- PART 1: 3D THREE-TIER BIRTHDAY CAKE & PINK KNIFE -->
+        <div class="cake3d-stage-wrapper">
+          <div class="cake3d-instructions">
+            <span class="instruction-sparkle">✨</span>
+            <span class="instruction-text">Drag the pink knife down across the cake to cut your slice! 🔪🍰</span>
+          </div>
+
+          <div class="cake3d-viewport-container" id="cake3d-viewport">
+            <canvas id="cake3d-canvas"></canvas>
+
+            <!-- Interactive Pink Knife Controller -->
+            <div id="interactive-knife" class="interactive-knife" title="Drag me down to cut the cake!">
+              <div class="knife-blade">
+                <span class="blade-shimmer"></span>
+              </div>
+              <div class="knife-guard"></div>
+              <div class="knife-handle">
+                <div class="handle-grip-ribs"></div>
+                <div class="knife-pommel">🎀</div>
+              </div>
+            </div>
+
+            <!-- Cut Progress Guide Line -->
+            <div id="cut-guide-line" class="cut-guide-line"></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- SECTION 6: "WE WERE KIDDING" + RUNAWAY YESS!! BUTTON -->
+      <!-- (Appears right after the cake is cut) -->
+      <!-- =================================================================== -->
+      <section id="slide6-kidding" class="birthday-card slide6-kidding-card" style="display: none;" role="region"
+        aria-labelledby="kidding-heading">
+        <div class="eager-box">
+          <span class="slide-badge">😜 ONE LAST THING...</span>
+          <h2 id="kidding-heading" class="shimmer-heading cute-script-heading"
+            style="font-size: 2.25rem; margin: 0.8rem 0 1.25rem; line-height: 1.35;">
+            We were kidding ready for your final surprise 😜✨
+          </h2>
+
+          <div class="runaway-arena" id="runaway-arena">
+            <button id="runaway-yes-btn" class="runaway-btn runaway-locked" aria-label="YESS button">
+              <span class="btn-text">YESS!! 💖</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- SECTION 7: THE FINAL SLIDE (ONLY THE VIDEO IS SHOWN) -->
+      <!-- (Unlocked only after clicking the unlocked YESS!! button) -->
+      <!-- =================================================================== -->
+      <section id="slide7-video-final" class="birthday-card slide-video-only-card" style="display: none;" role="region"
+        aria-labelledby="slide7-heading">
+        <header class="slide-header" style="margin-bottom: 0.85rem;">
+          <span class="slide-badge">🎬 YOUR FINAL SURPRISE</span>
+          <h2 id="slide7-heading" class="shimmer-heading">Happy 20th Birthday, Sandhiya! 💖✨</h2>
+        </header>
+
+        <!-- Celebratory Video Player (ONLY VIDEO) -->
+        <div class="video-container-frame">
+          <video id="surprise-video" class="surprise-video-player" poster="images/sandhiya.jpg" controls playsinline preload="auto">
+            <source src="video/birthday-surprise.mp4" type="video/mp4">
+            <source src="video/surprise.mp4" type="video/mp4">
+            <source src="video/video.mp4" type="video/mp4">
+            <source src="video/sandhiya.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+          </video>
+          <div id="video-play-overlay" class="video-play-overlay" style="display: none;">
+            <button type="button" id="tap-to-play-video-btn" class="tap-to-play-btn">
+              <span class="play-icon">▶️</span>
+              <span class="play-label">Tap to Play Video with Sound 🎬🔊</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+
+
+    </div>
+  </main>
+
+  <!-- Toast Notification Popup -->
+  <div id="toast-notification" class="toast-notification" aria-live="polite"></div>
+
+  <!-- 3D Engine for Interactive Cake -->
+  <script src="three.min.js"></script>
+
+  <!-- Main JavaScript File (cache-busted) -->
+  <script src="script.js?v=11"></script>
+</body>
+
+</html>
