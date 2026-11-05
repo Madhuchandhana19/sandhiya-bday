@@ -1548,6 +1548,13 @@ function startRunawayYesButton() {
     }
   };
 
+  yesBtn.ontouchend = (e) => {
+    if (!isRunawayActive) {
+      e.preventDefault();
+      handleYesButtonClick();
+    }
+  };
+
   yesBtn.onclick = (e) => {
     if (isRunawayActive) {
       e.preventDefault();
@@ -1630,6 +1637,9 @@ function startSurpriseVideo() {
 
   video.muted = false;
   video.currentTime = 0;
+  try {
+    video.load();
+  } catch (_) {}
 
   const playPromise = video.play();
   if (playPromise !== undefined) {
@@ -1650,6 +1660,8 @@ function startSurpriseVideo() {
     };
   }
 }
+
+window.handleYesButtonClick = handleYesButtonClick;
 
 // Slide 5 audio cleanups (replaced by ambient song)
 function startSlide5Music() {}
