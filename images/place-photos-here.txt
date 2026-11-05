@@ -8,8 +8,23 @@ Simply replace the placeholder images in this folder with your own photos keepin
 3. memory1.jpg  -> Slide 3 (Memory 1 photo)
 4. memory2.jpg  -> Slide 3 (Memory 2 photo)
 5. memory3.jpg  -> Slide 3 (Memory 3 photo)
-6. photo4.jpg   -> Slide 4 (Things We Love About You photo)
-7. photo5.jpg   -> Slide 5 (Make a Wish / Final Celebration photo)
+
+Slide 2 Letter Outside Margins (4 photos):
+- imagesletter-photo7.jpg  -> Slide 2 Letter (Top-Left Margin)
+- imagesletter-photo8.jpg  -> Slide 2 Letter (Top-Right Margin)
+- imagesletter-photo9.jpg  -> Slide 2 Letter (Bottom-Left Margin)
+- imagesletter-photo10.jpg -> Slide 2 Letter (Bottom-Right Margin)
+
+Slide 4 Letter Outside Margins (6 photos):
+- letter-photo1.jpg (or imagesletter-photo1.jpg) -> Slide 4 (Top-Left)
+- letter-photo2.jpg (or imagesletter-photo2.jpg) -> Slide 4 (Top-Right)
+- letter-photo3.jpg (or imagesletter-photo3.jpg) -> Slide 4 (Mid-Left)
+- letter-photo4.jpg (or imagesletter-photo4.jpg) -> Slide 4 (Mid-Right)
+- letter-photo5.jpg (or imagesletter-photo5.jpg) -> Slide 4 (Bottom-Left)
+- letter-photo6.jpg (or imagesletter-photo6.jpg) -> Slide 4 (Bottom-Right)
+
+Slide 5:
+- photo5.jpg -> Slide 5 (Make a Wish / Final Celebration photo)
 
 Tip: Any standard image format (.jpg, .jpeg, .png) will work. If your images have a different extension (like .png), just update the file name in script.js under SLIDES data at the top!
 

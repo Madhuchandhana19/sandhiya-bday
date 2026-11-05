@@ -1795,9 +1795,7 @@ body {
 .vintage-letter-content {
   position: relative;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1.35rem;
+  display: flow-root; /* establishes block formatting context so floats wrap cleanly without overflow */
   font-family: 'Dancing Script', 'Caveat', cursive;
   font-size: 1.32rem;
   font-weight: 700;
@@ -1813,15 +1811,324 @@ body {
 }
 
 .vintage-letter-content p {
-  margin: 0;
+  margin: 0 0 1.45rem 0;
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
+}
+
+.vintage-letter-content p:last-child {
+  margin-bottom: 0;
 }
 
 @media (max-width: 440px) {
   .vintage-letter-content {
     font-size: 1.18rem;
     line-height: 1.8;
-    gap: 1.15rem;
+  }
+
+  .vintage-letter-content p {
+    margin-bottom: 1.25rem;
+  }
+}
+
+/* ==========================================================================
+   SLIDE 4: OUTSIDE-MARGIN SCRAPBOOK SHOWCASE
+   Wide 3-column stage: Left Outside Frames | Centered Letter | Right Outside Frames
+   Utilizes the generous free space on laptop & desktop viewports
+   ========================================================================== */
+.burnt-card-wrapper {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+  width: 100%;
+}
+
+.letter-outer-showcase {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* Wide Laptop & Desktop Screens: Break out to utilize the generous free margin space */
+@media (min-width: 960px) {
+  .burnt-card-wrapper,
+  .celebration-card {
+    width: min(94vw, 1200px);
+    margin-left: calc(-1 * (min(94vw, 1200px) - 100%) / 2);
+  }
+
+  .letter-outer-showcase {
+    gap: 1.75rem;
+  }
+
+  .letter-side-margin {
+    flex: 0 0 200px;
+    max-width: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 1.5rem;
+    padding: 0.5rem 0;
+  }
+
+  .vintage-scrapbook-letter,
+  .slide2-letter-box {
+    flex: 1 1 600px;
+    max-width: 660px;
+    margin: 0;
+  }
+}
+
+/* Medium Tablets: Compact side margins */
+@media (min-width: 768px) and (max-width: 959px) {
+  .burnt-card-wrapper,
+  .celebration-card {
+    width: min(96vw, 880px);
+    margin-left: calc(-1 * (min(96vw, 880px) - 100%) / 2);
+  }
+
+  .letter-side-margin {
+    flex: 0 0 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 1rem;
+    padding: 0.5rem 0;
+  }
+
+  .vintage-scrapbook-letter,
+  .slide2-letter-box {
+    flex: 1 1 auto;
+    margin: 0;
+  }
+}
+
+/* Mobile Screens: Top 3 & Bottom 3 Polaroid Collages flanking the letter */
+@media (max-width: 767px) {
+  .letter-outer-showcase {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .letter-side-margin {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 580px;
+  }
+
+  .slide2-showcase .letter-side-margin {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 400px;
+  }
+
+  .vintage-scrapbook-letter,
+  .slide2-letter-box {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+/* Polaroid Frames Styling */
+.letter-polaroid-frame {
+  position: relative;
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16), 0 4px 12px rgba(255, 105, 180, 0.22);
+  border: 1.5px solid rgba(255, 220, 235, 0.95);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, z-index 0.1s ease;
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+/* Left Margin Rotations */
+.frame-left-1 {
+  transform: rotate(-3.5deg);
+}
+
+.frame-left-2 {
+  transform: rotate(2.5deg);
+}
+
+.frame-left-3 {
+  transform: rotate(-3deg);
+}
+
+/* Right Margin Rotations */
+.frame-right-1 {
+  transform: rotate(3.5deg);
+}
+
+.frame-right-2 {
+  transform: rotate(-2.5deg);
+}
+
+.frame-right-3 {
+  transform: rotate(3deg);
+}
+
+/* Interactive Hover Lift & Un-tilt */
+.letter-polaroid-frame:hover {
+  transform: translateY(-6px) scale(1.06) rotate(0deg) !important;
+  box-shadow: 0 20px 42px rgba(255, 20, 147, 0.35), 0 6px 16px rgba(0, 0, 0, 0.18);
+  z-index: 25;
+}
+
+/* Scrapbook Washi Tape on Top */
+.polaroid-pin-tape {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1deg);
+  width: 56px;
+  height: 16px;
+  background: rgba(255, 182, 193, 0.88); /* Sweet pink */
+  border-left: 2px dashed rgba(255, 255, 255, 0.75);
+  border-right: 2px dashed rgba(255, 255, 255, 0.75);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.frame-tape-peach .polaroid-pin-tape {
+  background: rgba(255, 218, 185, 0.92);
+  transform: translateX(-50%) rotate(2deg);
+}
+
+.frame-tape-lavender .polaroid-pin-tape {
+  background: rgba(230, 230, 250, 0.94);
+  transform: translateX(-50%) rotate(-2deg);
+}
+
+.frame-tape-mint .polaroid-pin-tape {
+  background: rgba(178, 235, 242, 0.94);
+  transform: translateX(-50%) rotate(2.5deg);
+}
+
+.frame-tape-gold .polaroid-pin-tape {
+  background: rgba(255, 236, 179, 0.94);
+  transform: translateX(-50%) rotate(1.5deg);
+}
+
+.frame-tape-coral .polaroid-pin-tape {
+  background: rgba(255, 192, 203, 0.94);
+  transform: translateX(-50%) rotate(-2deg);
+}
+
+/* Image Container */
+.polaroid-img-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #fff5f8;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 192, 203, 0.45);
+}
+
+.polaroid-photo {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 4px;
+}
+
+/* Placeholder Box (fallback if image fails to load) */
+.polaroid-placeholder-box {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  background: linear-gradient(135deg, #fff7fa 0%, #ffeef5 100%);
+  border: 1.5px dashed rgba(255, 105, 180, 0.45);
+  border-radius: 4px;
+  padding: 0.4rem;
+  text-align: center;
+  user-select: none;
+  z-index: 1;
+}
+
+.placeholder-icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 2px 4px rgba(255, 105, 180, 0.25));
+  animation: pulseCamera 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes pulseCamera {
+  0% { transform: scale(0.94); opacity: 0.85; }
+  100% { transform: scale(1.08); opacity: 1; }
+}
+
+.placeholder-title {
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--color-deep-pink);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+.placeholder-hint {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  color: var(--color-text-muted);
+  line-height: 1.2;
+}
+
+/* Handwritten Polaroid Chin Caption */
+.polaroid-caption {
+  margin-top: 6px;
+  text-align: center;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #5c1e35;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 520px) {
+  .letter-polaroid-frame {
+    padding: 6px 6px 10px 6px;
+  }
+
+  .polaroid-caption {
+    font-size: 0.88rem;
+    margin-top: 4px;
+  }
+}
+
+@media (max-width: 390px) {
+  .letter-polaroid-frame {
+    padding: 5px 5px 8px 5px;
+  }
+
+  .polaroid-caption {
+    font-size: 0.78rem;
+  }
+
+  .polaroid-pin-tape {
+    width: 42px;
+    height: 12px;
+    top: -6px;
   }
 }
 
