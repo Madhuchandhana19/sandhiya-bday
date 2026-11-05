@@ -1,0 +1,8 @@
+{
+  "mode": "streamlined",
+  "workflow": "sdd",
+  "commit_strategy": "atomic",
+  "verification": true,
+  "created_at": "2026-11-05"
+}
+

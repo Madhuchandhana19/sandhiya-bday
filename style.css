@@ -33,7 +33,9 @@
 }
 
 /* Base Reset & Box Sizing */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -48,19 +50,16 @@ html {
 
 body {
   font-family: var(--font-body);
-  background-color: #ffeef6;
-  /* Live Shiny Shimmering Pink & White Animated Gradient */
-  background: linear-gradient(
-    -45deg,
-    #ffeaf3 0%,
-    #ffcde2 20%,
-    #ffffff 42%,
-    #ffb3d4 65%,
-    #fff0f7 82%,
-    #ffffff 100%
-  );
-  background-size: 320% 320%;
-  animation: liveShinyGradient 14s ease-in-out infinite alternate;
+  background-color: #fff6fa;
+  /* Luxurious Strawberry-Milk & Champagne Rose-Gold Living Pastel Mesh */
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255, 182, 193, 0.45) 0%, transparent 45%),
+    radial-gradient(circle at 85% 25%, rgba(255, 236, 179, 0.42) 0%, transparent 42%),
+    radial-gradient(circle at 50% 75%, rgba(255, 192, 203, 0.38) 0%, transparent 52%),
+    radial-gradient(circle at 80% 85%, rgba(255, 224, 230, 0.45) 0%, transparent 45%),
+    linear-gradient(135deg, #fff6fa 0%, #ffeaf2 25%, #ffffff 50%, #ffe4ee 75%, #fff4f9 100%);
+  background-size: 200% 200%;
+  animation: livePastelMesh 22s ease-in-out infinite alternate;
   background-attachment: fixed;
   color: var(--color-text-dark);
   min-height: 100vh;
@@ -72,10 +71,166 @@ body {
   line-height: 1.6;
 }
 
-@keyframes liveShinyGradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+@keyframes livePastelMesh {
+  0% {
+    background-position: 0% 0%;
+  }
+
+  50% {
+    background-position: 100% 100%;
+  }
+
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+/* ==========================================================================
+   ATMOSPHERIC AURORA & LUMINOUS BOKEH ORBS
+   Rich, glowing light spheres that drift smoothly across laptop displays
+   ========================================================================== */
+.aurora-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.aurora-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(85px);
+  opacity: 0.45;
+  mix-blend-mode: multiply;
+  will-change: transform;
+}
+
+/* Orb 1: Soft Luminous Champagne Gold (Top-Left) */
+.aurora-orb.orb-1 {
+  width: 580px;
+  height: 580px;
+  background: radial-gradient(circle, rgba(255, 229, 180, 0.7) 0%, rgba(255, 248, 220, 0.25) 50%, transparent 70%);
+  top: -100px;
+  left: -80px;
+  animation: floatOrb1 20s ease-in-out infinite alternate;
+}
+
+/* Orb 2: Sweet Blush Strawberry Pink (Top-Right) */
+.aurora-orb.orb-2 {
+  width: 620px;
+  height: 620px;
+  background: radial-gradient(circle, rgba(255, 192, 203, 0.7) 0%, rgba(255, 228, 235, 0.25) 50%, transparent 70%);
+  top: -60px;
+  right: -100px;
+  animation: floatOrb2 23s ease-in-out infinite alternate;
+}
+
+/* Orb 3: Romantic Lavender Rose (Bottom-Left) */
+.aurora-orb.orb-3 {
+  width: 580px;
+  height: 580px;
+  background: radial-gradient(circle, rgba(243, 229, 245, 0.65) 0%, rgba(255, 240, 248, 0.25) 50%, transparent 70%);
+  bottom: -90px;
+  left: -80px;
+  animation: floatOrb3 26s ease-in-out infinite alternate;
+}
+
+/* Orb 4: Sweet Peach Coral (Bottom-Right) */
+.aurora-orb.orb-4 {
+  width: 560px;
+  height: 560px;
+  background: radial-gradient(circle, rgba(255, 218, 230, 0.65) 0%, rgba(255, 245, 248, 0.25) 50%, transparent 70%);
+  bottom: -80px;
+  right: -80px;
+  animation: floatOrb4 24s ease-in-out infinite alternate;
+}
+
+/* Orb 5: Center Radiant Pearl */
+.aurora-orb.orb-5 {
+  width: 680px;
+  height: 680px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.75) 0%, rgba(255, 240, 246, 0.35) 40%, transparent 70%);
+  top: 25%;
+  left: 25%;
+  animation: floatOrb5 28s ease-in-out infinite alternate;
+}
+
+.aurora-dust-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(255, 192, 203, 0.10) 0%, transparent 80%);
+  pointer-events: none;
+}
+
+@keyframes floatOrb1 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(130px, 90px) scale(1.15);
+  }
+
+  100% {
+    transform: translate(50px, 160px) scale(0.95);
+  }
+}
+
+@keyframes floatOrb2 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(-150px, 110px) scale(1.12);
+  }
+
+  100% {
+    transform: translate(-70px, 190px) scale(0.92);
+  }
+}
+
+@keyframes floatOrb3 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(110px, -120px) scale(1.18);
+  }
+
+  100% {
+    transform: translate(170px, -50px) scale(0.9);
+  }
+}
+
+@keyframes floatOrb4 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(-130px, -100px) scale(1.1);
+  }
+
+  100% {
+    transform: translate(-80px, -170px) scale(1.05);
+  }
+}
+
+@keyframes floatOrb5 {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+
+  50% {
+    transform: translate(-90px, 70px) scale(1.2) rotate(15deg);
+  }
+
+  100% {
+    transform: translate(80px, -60px) scale(0.9) rotate(-10deg);
+  }
 }
 
 /* ==========================================================================
@@ -121,9 +276,9 @@ body {
   position: absolute;
   bottom: -130px;
   border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-  box-shadow: 
-    inset -7px -7px 14px rgba(0, 0, 0, 0.08), 
-    inset 8px 8px 16px rgba(255, 255, 255, 0.75), 
+  box-shadow:
+    inset -7px -7px 14px rgba(0, 0, 0, 0.08),
+    inset 8px 8px 16px rgba(255, 255, 255, 0.75),
     0 10px 24px rgba(255, 105, 180, 0.22);
   will-change: transform, opacity;
   animation: floatUpBalloon linear forwards, balloonSway ease-in-out infinite alternate;
@@ -174,12 +329,15 @@ body {
     transform: translateY(0);
     opacity: 0;
   }
+
   8% {
     opacity: 0.92;
   }
+
   92% {
     opacity: 0.92;
   }
+
   100% {
     transform: translateY(-125vh);
     opacity: 0;
@@ -191,6 +349,7 @@ body {
     margin-left: -18px;
     transform: rotate(-5deg);
   }
+
   100% {
     margin-left: 18px;
     transform: rotate(5deg);
@@ -198,8 +357,13 @@ body {
 }
 
 @keyframes stringWave {
-  0% { transform: translateX(-50%) rotate(-4deg); }
-  100% { transform: translateX(-50%) rotate(4deg); }
+  0% {
+    transform: translateX(-50%) rotate(-4deg);
+  }
+
+  100% {
+    transform: translateX(-50%) rotate(4deg);
+  }
 }
 
 /* Floating ambient symbols - kept strictly behind cards */
@@ -219,16 +383,96 @@ body {
   animation: floatAmbient 14s infinite ease-in-out;
 }
 
-.h1 { top: 12%; left: 8%; animation-duration: 16s; animation-delay: 0s; font-size: 1.6rem; }
-.h2 { top: 25%; right: 10%; animation-duration: 18s; animation-delay: 2s; font-size: 1.3rem; }
-.h3 { top: 60%; left: 6%; animation-duration: 20s; animation-delay: 4s; font-size: 1.4rem; }
-.h4 { top: 75%; right: 8%; animation-duration: 15s; animation-delay: 1s; font-size: 1.7rem; }
-.h5 { top: 88%; left: 20%; animation-duration: 19s; animation-delay: 3s; font-size: 1.2rem; }
-.h6 { top: 40%; right: 5%; animation-duration: 17s; animation-delay: 5s; font-size: 1.5rem; }
+.h1 {
+  top: 12%;
+  left: 8%;
+  animation-duration: 16s;
+  animation-delay: 0s;
+  font-size: 1.6rem;
+}
+
+.h2 {
+  top: 25%;
+  right: 10%;
+  animation-duration: 18s;
+  animation-delay: 2s;
+  font-size: 1.3rem;
+}
+
+.h3 {
+  top: 60%;
+  left: 6%;
+  animation-duration: 20s;
+  animation-delay: 4s;
+  font-size: 1.4rem;
+}
+
+.h4 {
+  top: 75%;
+  right: 8%;
+  animation-duration: 15s;
+  animation-delay: 1s;
+  font-size: 1.7rem;
+}
+
+.h5 {
+  top: 88%;
+  left: 20%;
+  animation-duration: 19s;
+  animation-delay: 3s;
+  font-size: 1.2rem;
+}
+
+.h6 {
+  top: 40%;
+  right: 5%;
+  animation-duration: 17s;
+  animation-delay: 5s;
+  font-size: 1.5rem;
+}
+
+.h7 {
+  top: 18%;
+  right: 14%;
+  animation-duration: 21s;
+  animation-delay: 3.5s;
+  font-size: 1.5rem;
+}
+
+.h8 {
+  top: 48%;
+  left: 4%;
+  animation-duration: 17s;
+  animation-delay: 1.5s;
+  font-size: 1.2rem;
+}
+
+.h9 {
+  top: 82%;
+  right: 16%;
+  animation-duration: 23s;
+  animation-delay: 4.2s;
+  font-size: 1.4rem;
+}
+
+.h10 {
+  top: 32%;
+  left: 14%;
+  animation-duration: 19s;
+  animation-delay: 2.8s;
+  font-size: 1.3rem;
+}
 
 @keyframes floatAmbient {
-  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-  50% { transform: translateY(-25px) rotate(12deg) scale(1.15); }
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: translateY(-25px) rotate(12deg) scale(1.15);
+  }
 }
 
 /* ==========================================================================
@@ -250,21 +494,23 @@ body {
 .brand-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.9rem;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  gap: 0.45rem;
+  padding: 0.45rem 1.05rem;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-radius: var(--radius-pill);
-  border: 1.5px solid var(--color-pastel-pink);
-  box-shadow: 0 4px 15px rgba(255, 105, 180, 0.15);
+  border: 1.5px solid rgba(255, 215, 0, 0.65);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.32), 0 0 16px rgba(255, 215, 0, 0.32);
 }
 
 .brand-text {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--color-hot-pink);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  background: linear-gradient(135deg, #ff1493 0%, #d946ef 50%, #ff007f 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   text-transform: uppercase;
 }
 
@@ -274,8 +520,15 @@ body {
 }
 
 @keyframes pulseRotate {
-  0%, 100% { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(25deg) scale(1.25); }
+
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(25deg) scale(1.25);
+  }
 }
 
 /* Music Toggle Button */
@@ -283,8 +536,10 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.45rem 0.95rem;
-  background: var(--color-white);
+  padding: 0.45rem 1.05rem;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border: 1.5px solid var(--color-hot-pink);
   border-radius: var(--radius-pill);
   font-family: var(--font-body);
@@ -292,20 +547,21 @@ body {
   font-weight: 600;
   color: var(--color-hot-pink);
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(255, 20, 147, 0.18);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.32), 0 0 16px rgba(255, 20, 147, 0.32);
   transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .music-toggle-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 20, 147, 0.28);
-  background: var(--color-blush);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.4), 0 0 22px rgba(255, 20, 147, 0.5);
+  background: #ffffff;
 }
 
 .music-toggle-btn.is-playing {
   background: linear-gradient(135deg, var(--color-hot-pink), #ff4d94);
   color: var(--color-white);
-  border-color: transparent;
+  border-color: rgba(255, 215, 0, 0.6);
+  box-shadow: 0 6px 24px rgba(255, 20, 147, 0.45), 0 0 18px rgba(255, 215, 0, 0.4);
 }
 
 /* Equalizer Bars Animation */
@@ -327,16 +583,25 @@ body {
 .music-toggle-btn.is-playing .music-visualizer span:nth-child(1) {
   animation: eqBar 0.9s infinite ease-in-out;
 }
+
 .music-toggle-btn.is-playing .music-visualizer span:nth-child(2) {
   animation: eqBar 0.6s infinite ease-in-out 0.2s;
 }
+
 .music-toggle-btn.is-playing .music-visualizer span:nth-child(3) {
   animation: eqBar 0.8s infinite ease-in-out 0.4s;
 }
 
 @keyframes eqBar {
-  0%, 100% { height: 4px; }
-  50% { height: 14px; }
+
+  0%,
+  100% {
+    height: 4px;
+  }
+
+  50% {
+    height: 14px;
+  }
 }
 
 /* ==========================================================================
@@ -369,20 +634,24 @@ body {
 .birthday-card {
   position: relative;
   z-index: 10;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-radius: var(--radius-card);
   padding: 1.85rem 1.5rem 1.5rem;
-  box-shadow: var(--shadow-card);
+  box-shadow:
+    0 30px 80px -10px rgba(0, 0, 0, 0.65),
+    0 0 50px rgba(255, 20, 147, 0.35),
+    0 0 25px rgba(255, 215, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
   overflow: hidden;
-  /* Glowing Pink Gradient Border */
+  /* Glowing Gold & Pink Gradient Border */
   border: 2px solid transparent;
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
-  background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.94)),
-    linear-gradient(135deg, #ff1493 0%, #ff85a2 35%, #ffffff 50%, #ff69b4 70%, #ff1493 100%);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.97), rgba(255, 255, 255, 0.94)),
+    linear-gradient(135deg, #ffd700 0%, #ff1493 28%, #ff85a2 50%, #d946ef 72%, #ffd700 100%);
   animation: fadeInScale 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
@@ -397,6 +666,7 @@ body {
     opacity: 0;
     transform: translateY(20px) scale(0.97);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -409,10 +679,27 @@ body {
 }
 
 @keyframes shakeError {
-  10%, 90% { transform: translate3d(-3px, 0, 0); }
-  20%, 80% { transform: translate3d(5px, 0, 0); }
-  30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
-  40%, 60% { transform: translate3d(6px, 0, 0); }
+
+  10%,
+  90% {
+    transform: translate3d(-3px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(5px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-6px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(6px, 0, 0);
+  }
 }
 
 /* Top Subtle Gloss Highlight */
@@ -443,8 +730,15 @@ body {
 }
 
 @keyframes floatCrown {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-8px) rotate(4deg); }
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(4deg);
+  }
 }
 
 .auth-photo-frame {
@@ -477,6 +771,7 @@ body {
   .auth-photo-frame {
     max-width: 215px;
   }
+
   .auth-queen-img {
     height: 250px;
   }
@@ -561,6 +856,7 @@ body {
     opacity: 0;
     transform: translateY(-6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -620,8 +916,15 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .auth-submit-btn {
@@ -681,15 +984,13 @@ body {
   font-size: 1.95rem;
   line-height: 1.25;
   margin-bottom: 0.35rem;
-  background: linear-gradient(
-    135deg,
-    #ff1493 0%,
-    #ff69b4 25%,
-    #e91e63 45%,
-    #ff85a2 65%,
-    #ff1493 85%,
-    #ff007f 100%
-  );
+  background: linear-gradient(135deg,
+      #ff1493 0%,
+      #ff69b4 25%,
+      #e91e63 45%,
+      #ff85a2 65%,
+      #ff1493 85%,
+      #ff007f 100%);
   background-size: 300% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -710,9 +1011,17 @@ body {
 }
 
 @keyframes shimmerText {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .slide-subtitle {
@@ -849,7 +1158,7 @@ body {
   height: 22px;
   background: linear-gradient(to bottom, #fff7a0, #ff8c00, #ff2e93);
   border-radius: 50% 50% 35% 35%;
-  box-shadow: 
+  box-shadow:
     0 0 12px #ffc107,
     0 0 25px rgba(255, 46, 147, 0.8),
     0 -4px 10px rgba(255, 255, 255, 0.8);
@@ -865,11 +1174,25 @@ body {
 }
 
 @keyframes flicker {
-  0% { transform: rotate(-2deg) scale(1); }
-  25% { transform: rotate(3deg) scale(1.08, 0.95); }
-  50% { transform: rotate(-3deg) scale(0.95, 1.05); }
-  75% { transform: rotate(2deg) scale(1.04, 1); }
-  100% { transform: rotate(-1deg) scale(1); }
+  0% {
+    transform: rotate(-2deg) scale(1);
+  }
+
+  25% {
+    transform: rotate(3deg) scale(1.08, 0.95);
+  }
+
+  50% {
+    transform: rotate(-3deg) scale(0.95, 1.05);
+  }
+
+  75% {
+    transform: rotate(2deg) scale(1.04, 1);
+  }
+
+  100% {
+    transform: rotate(-1deg) scale(1);
+  }
 }
 
 .smoke-puff {
@@ -885,8 +1208,15 @@ body {
 }
 
 @keyframes smokeRise {
-  0% { opacity: 0.8; transform: translateY(0) scale(0.8); }
-  100% { opacity: 0; transform: translateY(-35px) scale(1.8); }
+  0% {
+    opacity: 0.8;
+    transform: translateY(0) scale(0.8);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-35px) scale(1.8);
+  }
 }
 
 .candle-wick {
@@ -898,13 +1228,11 @@ body {
 .candle-body {
   width: 10px;
   height: 26px;
-  background: repeating-linear-gradient(
-    45deg,
-    #ff1493,
-    #ff1493 5px,
-    #ffffff 5px,
-    #ffffff 10px
-  );
+  background: repeating-linear-gradient(45deg,
+      #ff1493,
+      #ff1493 5px,
+      #ffffff 5px,
+      #ffffff 10px);
   border-radius: 3px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
@@ -1047,6 +1375,7 @@ body {
   letter-spacing: 0.02em;
   line-height: 1.3;
 }
+
 .game-badge {
   display: inline-block;
   padding: 0.25rem 0.85rem;
@@ -1082,9 +1411,17 @@ body {
   transform: translateY(-2px);
 }
 
-.player-score-card { border-color: var(--color-hot-pink); }
-.ai-score-card { border-color: #8b5cf6; }
-.tie-score-card { border-color: #fbbf24; }
+.player-score-card {
+  border-color: var(--color-hot-pink);
+}
+
+.ai-score-card {
+  border-color: #8b5cf6;
+}
+
+.tie-score-card {
+  border-color: #fbbf24;
+}
 
 .score-label {
   font-size: 0.72rem;
@@ -1155,9 +1492,17 @@ body {
 }
 
 @keyframes choicePop {
-  0% { transform: scale(0.6) rotate(-10deg); }
-  50% { transform: scale(1.2) rotate(6deg); }
-  100% { transform: scale(1) rotate(0deg); }
+  0% {
+    transform: scale(0.6) rotate(-10deg);
+  }
+
+  50% {
+    transform: scale(1.2) rotate(6deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
 }
 
 .choice-name {
@@ -1215,9 +1560,21 @@ body {
 }
 
 @keyframes headShake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-6px); }
-  40%, 80% { transform: translateX(6px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
 }
 
 .game-status-text {
@@ -1408,8 +1765,8 @@ body {
 .vintage-scrapbook-letter {
   position: relative;
   /* Dreamy Pinkish-White translucent backdrop over the 3D balloons background */
-  background: linear-gradient(135deg, rgba(255, 248, 251, 0.93) 0%, rgba(255, 238, 245, 0.95) 100%), 
-              url('images/slide4-bg.jpg') no-repeat center top / cover;
+  background: linear-gradient(135deg, rgba(255, 248, 251, 0.93) 0%, rgba(255, 238, 245, 0.95) 100%),
+    url('images/slide4-bg.jpg') no-repeat center top / cover;
   background-color: #fff0f5;
   border-radius: 28px;
   padding: 2.5rem 1.85rem;
@@ -1540,152 +1897,350 @@ body {
   text-align: center;
 }
 
-.cake3d-instructions {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.45rem 1.15rem;
-  background: #fff2f7;
-  border-radius: var(--radius-pill);
-  border: 1.5px dashed var(--color-pastel-pink);
-  margin-bottom: 0.85rem;
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: #b82565;
-  box-shadow: 0 2px 10px rgba(255, 105, 180, 0.1);
-}
-
-.cake3d-viewport-container {
+/* ==========================================================================
+   THE ARTISANAL CHOCO-CHIP COOKIE INTERACTIVE STAGE
+   ========================================================================== */
+.fortune-stage-wrapper,
+.choco-stage-wrapper {
   position: relative;
   width: 100%;
-  height: 420px;
-  border-radius: 26px;
-  background: radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.98) 0%, rgba(255, 242, 248, 0.88) 75%, rgba(255, 228, 240, 0.95) 100%);
-  border: 2px solid rgba(255, 205, 225, 0.85);
-  box-shadow: inset 0 4px 20px rgba(255, 105, 180, 0.12), 0 14px 35px rgba(255, 105, 180, 0.18);
-  overflow: hidden;
-  touch-action: none;
+  max-width: 520px;
+  margin: 1.25rem auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-@media (max-width: 440px) {
-  .cake3d-viewport-container {
-    height: 360px;
+.cookie-interactive-box,
+.choco-interactive-box {
+  position: relative;
+  width: 280px;
+  height: 270px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  user-select: none;
+  margin-bottom: 1.5rem;
+  transition: transform 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cookie-interactive-box:hover,
+.choco-interactive-box:hover {
+  transform: scale(1.05);
+}
+
+.cookie-interactive-box:active,
+.choco-interactive-box:active {
+  cursor: default;
+  transform: scale(0.97);
+}
+
+/* Animated Floating Hammer Following Mouse */
+.cookie-hammer {
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  pointer-events: none;
+  z-index: 60;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transform: translate(-999px, -999px);
+  transition: opacity 0.2s ease, transform 0.04s linear;
+  filter: drop-shadow(0 6px 14px rgba(78, 52, 46, 0.45));
+}
+
+.cookie-hammer .hammer-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transform-origin: 30% 30%;
+  transition: transform 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cookie-interactive-box:hover .cookie-hammer {
+  opacity: 1;
+}
+
+/* Hammer Strike Down Animation */
+.cookie-interactive-box:active .cookie-hammer .hammer-svg,
+.cookie-hammer.is-striking .hammer-svg {
+  transform: rotate(50deg) translate(6px, 10px) scale(1.12);
+}
+
+/* Disappear hammer when cookie is cracked */
+.cookie-interactive-box.is-cracked .cookie-hammer {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  display: none !important;
+}
+
+.cookie-interactive-box.is-cracked {
+  cursor: default !important;
+}
+
+/* Warm Bakery Aura Behind Cookie */
+.cookie-glow-halo,
+.choco-glow-halo {
+  position: absolute;
+  width: 270px;
+  height: 270px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.5) 0%, rgba(244, 114, 182, 0.28) 50%, transparent 75%);
+  filter: blur(28px);
+  pointer-events: none;
+  animation: haloPulse 3.2s infinite ease-in-out;
+}
+
+@keyframes haloPulse {
+  0%, 100% { transform: scale(0.92); opacity: 0.6; }
+  50% { transform: scale(1.15); opacity: 0.95; }
+}
+
+/* Cookie Shell Container (Holds Both Halves) */
+.cookie-shell,
+.choco-cookie-shell {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: cookieFloat 3.2s infinite ease-in-out;
+}
+
+@keyframes cookieFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-7px) rotate(1.5deg); }
+}
+
+/* Freshly Baked Choco-Chip Cookie Halves */
+.cookie-piece,
+.cookie-half {
+  position: absolute;
+  width: 125px;
+  height: 240px;
+  background: radial-gradient(circle at 45% 45%, #ffd285 0%, #f4b460 30%, #df9133 60%, #bd6f21 85%, #944a10 100%);
+  box-shadow: 
+    0 18px 36px rgba(110, 50, 10, 0.38),
+    inset 0 4px 8px rgba(255, 255, 255, 0.55),
+    inset -4px -6px 14px rgba(90, 35, 5, 0.45);
+  transition: all 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: hidden;
+}
+
+/* Left Half of Cookie */
+.cookie-piece-left,
+.cookie-half-left {
+  left: 0;
+  border-radius: 120px 0 0 120px;
+  clip-path: polygon(0% 0%, 100% 0%, 93% 15%, 100% 28%, 91% 42%, 99% 56%, 92% 70%, 100% 85%, 94% 100%, 0% 100%);
+  transform-origin: bottom left;
+}
+
+/* Right Half of Cookie */
+.cookie-piece-right,
+.cookie-half-right {
+  right: 0;
+  border-radius: 0 120px 120px 0;
+  clip-path: polygon(7% 0%, 100% 0%, 100% 100%, 6% 100%, 0% 85%, 8% 70%, 1% 56%, 9% 42%, 0% 28%, 7% 15%);
+  transform-origin: bottom right;
+}
+
+/* Organic Cookie Crumb Texture */
+.cookie-crumb-texture {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(146, 64, 14, 0.25) 2px, transparent 3px),
+    radial-gradient(circle at 75% 65%, rgba(180, 83, 9, 0.2) 2px, transparent 4px),
+    radial-gradient(circle at 45% 85%, rgba(120, 53, 15, 0.25) 3px, transparent 5px),
+    radial-gradient(circle at 60% 20%, rgba(255, 255, 255, 0.35) 1.5px, transparent 3px);
+  pointer-events: none;
+}
+
+/* Decadent Dark Chocolate Chips */
+.choco-chip {
+  position: absolute;
+  background: radial-gradient(circle at 35% 30%, #5d2f19 0%, #3e1b0c 60%, #1f0b04 100%);
+  box-shadow: 
+    2px 3px 6px rgba(0, 0, 0, 0.45),
+    inset 1.5px 2px 3px rgba(255, 255, 255, 0.4),
+    inset -1.5px -2px 3px rgba(0, 0, 0, 0.65);
+  border-radius: 42% 58% 70% 30% / 55% 35% 65% 45%;
+  z-index: 3;
+  pointer-events: none;
+  transition: transform 0.3s ease;
+}
+
+.choco-chip::after {
+  content: '';
+  position: absolute;
+  top: 18%;
+  left: 22%;
+  width: 28%;
+  height: 28%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 80%);
+  border-radius: 50%;
+}
+
+/* Chip Placements (Left Half) */
+.chip-1 { top: 30px; left: 42px; width: 28px; height: 26px; transform: rotate(18deg); }
+.chip-2 { top: 82px; left: 74px; width: 34px; height: 30px; transform: rotate(-24deg); }
+.chip-3 { top: 135px; left: 26px; width: 30px; height: 28px; transform: rotate(42deg); }
+.chip-4 { top: 180px; left: 62px; width: 26px; height: 25px; transform: rotate(-12deg); }
+.chip-5 { top: 110px; left: 92px; width: 22px; height: 21px; transform: rotate(60deg); }
+
+/* Chip Placements (Right Half) */
+.chip-6 { top: 34px; left: 34px; width: 32px; height: 30px; transform: rotate(-18deg); }
+.chip-7 { top: 84px; left: 66px; width: 28px; height: 27px; transform: rotate(32deg); }
+.chip-8 { top: 138px; left: 20px; width: 35px; height: 31px; transform: rotate(-16deg); }
+.chip-9 { top: 178px; left: 56px; width: 29px; height: 26px; transform: rotate(45deg); }
+.chip-10 { top: 112px; left: 76px; width: 23px; height: 22px; transform: rotate(-30deg); }
+
+/* When Cracked: Cookie Halves Break Cleanly Apart */
+.cookie-interactive-box.is-cracked .cookie-piece-left,
+.cookie-interactive-box.is-cracked .cookie-half-left {
+  transform: translate(-55px, -18px) rotate(-18deg) scale(0.95);
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.3));
+}
+
+.cookie-interactive-box.is-cracked .cookie-piece-right,
+.cookie-interactive-box.is-cracked .cookie-half-right {
+  transform: translate(55px, 20px) rotate(18deg) scale(0.95);
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.3));
+}
+
+.cookie-interactive-box.is-cracked .cookie-tap-pill {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.5);
+}
+
+.cookie-interactive-box.is-cracked .cookie-glow-halo {
+  animation: none;
+  transform: scale(1.4);
+  opacity: 0.35;
+}
+
+/* Tap Hint Pill */
+.cookie-tap-pill {
+  position: absolute;
+  bottom: -15px;
+  padding: 0.45rem 1.15rem;
+  background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  box-shadow: 0 6px 18px rgba(255, 20, 147, 0.38);
+  border: 1.5px solid #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  animation: bounceHint 1.8s infinite ease-in-out;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.choco-tap-pill {
+  background: linear-gradient(135deg, #7c3aed 0%, #d946ef 50%, #ff1493 100%);
+  box-shadow: 0 6px 20px rgba(217, 70, 239, 0.45);
+}
+
+@keyframes bounceHint {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* The Paper Fortune Note */
+.fortune-slip {
+  width: 100%;
+  max-width: 480px;
+  margin-top: 0.5rem;
+  animation: unrollSlip 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  transform-origin: top center;
+}
+
+@keyframes unrollSlip {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }
 
-#cake3d-canvas {
-  width: 100% !important;
-  height: 100% !important;
-  display: block;
-  outline: none;
-}
-
-/* Interactive Pink Cake Knife */
-.interactive-knife {
-  position: absolute;
-  right: 28px;
-  top: 35px;
-  width: 46px;
-  height: 165px;
-  z-index: 25;
-  cursor: grab;
-  user-select: none;
-  touch-action: none;
-  filter: drop-shadow(0 10px 20px rgba(255, 20, 147, 0.35));
-  transition: transform 0.08s ease-out;
-  animation: knifeIdleFloat 3s infinite ease-in-out;
-}
-
-.interactive-knife.is-dragging {
-  cursor: grabbing;
-  animation: none !important;
-  transition: none !important;
-  filter: drop-shadow(0 14px 26px rgba(255, 20, 147, 0.5));
-}
-
-@keyframes knifeIdleFloat {
-  0%, 100% { transform: translateY(0) rotate(-6deg); }
-  50% { transform: translateY(-10px) rotate(2deg); }
-}
-
-.knife-blade {
-  width: 20px;
-  height: 98px;
-  background: linear-gradient(135deg, #ffe0ec 0%, #ffffff 42%, #ff9ebb 75%, #ff5c8a 100%);
-  clip-path: polygon(100% 0, 80% 86%, 40% 100%, 0 94%, 0 0);
-  border-radius: 0 0 4px 0;
-  margin: 0 auto;
+.fortune-slip-inner {
+  background: linear-gradient(180deg, #fffef9 0%, #fff9ed 100%);
+  border: 2px dashed rgba(217, 119, 6, 0.45);
+  border-radius: 18px;
+  padding: 1.6rem 1.5rem;
+  box-shadow: 
+    0 16px 36px rgba(217, 119, 6, 0.18),
+    0 4px 14px rgba(255, 20, 147, 0.12),
+    inset 0 1px 0 #ffffff;
   position: relative;
-  overflow: hidden;
-  border-right: 1.5px solid rgba(255, 255, 255, 0.95);
+  text-align: center;
 }
 
-.blade-shimmer {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.85) 50%, transparent 100%);
-  animation: knifeBladeShimmer 2.5s infinite;
+.fortune-badge {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #d97706;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
 }
 
-@keyframes knifeBladeShimmer {
-  0% { transform: translateX(-100%); }
-  50%, 100% { transform: translateX(100%); }
+.fortune-quote {
+  font-family: 'EB Garamond', 'Caveat', serif;
+  font-size: 1.25rem;
+  line-height: 1.65;
+  color: #4a2810;
+  font-style: italic;
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
-.knife-guard {
-  width: 40px;
-  height: 8px;
-  background: linear-gradient(135deg, #ffd700, #fff4b8, #e5a900);
-  border-radius: 4px;
-  margin: 0 auto;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+.fortune-signature {
+  font-size: 0.92rem;
+  color: #ff1493;
+  font-weight: 600;
+  border-top: 1px dashed rgba(217, 119, 6, 0.25);
+  padding-top: 0.75rem;
 }
 
-.knife-handle {
-  width: 18px;
-  height: 58px;
+.fortune-cta-wrapper {
+  margin-top: 1.4rem;
+  display: flex;
+  justify-content: center;
+}
+
+.claim-gift-btn {
+  padding: 0.85rem 2.2rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
   background: linear-gradient(135deg, #ff1493 0%, #ff4081 50%, #d81b60 100%);
-  border-radius: 4px 4px 8px 8px;
-  margin: 0 auto;
-  position: relative;
-  box-shadow: inset -2px -2px 6px rgba(0, 0, 0, 0.25), inset 2px 2px 6px rgba(255, 255, 255, 0.45);
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 24px rgba(255, 20, 147, 0.4), 0 0 15px rgba(255, 215, 0, 0.35);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: gentleBounce 2.4s infinite ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
 }
 
-.handle-grip-ribs {
-  position: absolute;
-  top: 10px;
-  left: 3px;
-  right: 3px;
-  height: 36px;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent,
-    transparent 4px,
-    rgba(255, 255, 255, 0.35) 4px,
-    rgba(255, 255, 255, 0.35) 7px
-  );
-}
-
-.knife-pommel {
-  position: absolute;
-  bottom: -15px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1.2rem;
-  filter: drop-shadow(0 2px 4px rgba(255, 105, 180, 0.5));
-}
-
-.cut-guide-line {
-  position: absolute;
-  top: 15%;
-  bottom: 22%;
-  left: 50%;
-  width: 2px;
-  transform: translateX(-50%);
-  border-left: 2px dashed rgba(255, 20, 147, 0.45);
-  pointer-events: none;
-  opacity: 0.65;
-  transition: opacity 0.3s;
+.claim-gift-btn:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 12px 30px rgba(255, 20, 147, 0.55), 0 0 22px rgba(255, 215, 0, 0.5);
 }
 
 /* Part 2: Scroll Down & "I was kidding" Button */
@@ -1716,8 +2271,15 @@ body {
 }
 
 @keyframes arrowBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(9px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(9px);
+  }
 }
 
 .kidding-cta-wrapper {
@@ -1738,8 +2300,16 @@ body {
 }
 
 @keyframes gentleBounce {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.04) translateY(-3px); box-shadow: 0 14px 34px rgba(255, 20, 147, 0.52); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.04) translateY(-3px);
+    box-shadow: 0 14px 34px rgba(255, 20, 147, 0.52);
+  }
 }
 
 /* Part 3: "Are you eager?" & Runaway Button */
@@ -1816,6 +2386,7 @@ body {
     transform: scale(1);
     box-shadow: 0 10px 28px rgba(255, 20, 147, 0.4), 0 0 15px rgba(255, 215, 0, 0.5);
   }
+
   100% {
     transform: scale(1.06);
     box-shadow: 0 18px 45px rgba(255, 20, 147, 0.6), 0 0 30px rgba(255, 215, 0, 0.85);
@@ -1904,18 +2475,136 @@ body {
   .shimmer-heading {
     font-size: 1.7rem;
   }
+
   .slide-subtitle {
     font-size: 1.05rem;
   }
+
   .birthday-card {
     padding: 1.5rem 1.15rem 1.25rem;
   }
+
   .choice-display {
     width: 68px;
     height: 68px;
     font-size: 1.9rem;
   }
+
   .letter-content {
     font-size: 0.88rem;
+  }
+}
+
+/* ==========================================================================
+   PITCH BLACK "LIGHTS OUT" FULLSCREEN OVERLAY
+   Triggered immediately when candle is blown: screen turns 100% black,
+   then "Turn On Light" button appears, and clicking returns to light screen
+   with the heartfelt message revealed.
+   ========================================================================== */
+.blackout-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background-color: #000000;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.blackout-overlay.is-active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.blackout-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: all 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.blackout-content.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.turn-on-light-btn {
+  padding: 1.1rem 2.6rem;
+  font-family: var(--font-body);
+  font-size: 1.3rem;
+  font-weight: 800;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #ffd700 0%, #ffeb3b 50%, #ffb300 100%);
+  color: #261502;
+  border: 2.5px solid #ffffff;
+  box-shadow: 
+    0 0 35px rgba(255, 235, 59, 0.85),
+    0 0 70px rgba(255, 193, 7, 0.55),
+    0 12px 30px rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  animation: glowPulseLight 1.8s infinite ease-in-out;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.turn-on-light-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 
+    0 0 50px rgba(255, 235, 59, 1),
+    0 0 95px rgba(255, 193, 7, 0.75),
+    0 16px 36px rgba(0, 0, 0, 0.95);
+}
+
+.turn-on-light-btn:active {
+  transform: scale(0.95);
+}
+
+.turn-on-light-btn .btn-icon {
+  font-size: 1.5rem;
+  animation: bulbWiggle 2s infinite ease-in-out;
+}
+
+@keyframes glowPulseLight {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 30px rgba(255, 235, 59, 0.75), 0 0 65px rgba(255, 193, 7, 0.45);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 0 55px rgba(255, 235, 59, 1), 0 0 95px rgba(255, 193, 7, 0.7);
+  }
+}
+
+@keyframes bulbWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+
+/* Smooth Reveal Animation for the Letter and CTA */
+.celebration-reveal-box {
+  width: 100%;
+  animation: letterRevealDrop 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes letterRevealDrop {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }

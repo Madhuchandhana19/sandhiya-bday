@@ -148,21 +148,24 @@ function handleLoginAttempt() {
     const loginSec = document.getElementById("login-section");
     const celebSec = document.getElementById("celebration-section");
 
-    // Immediately reveal celebration slide
+    // Immediately reveal celebration slide in initial cake-only state
     if (loginSec) loginSec.style.display = "none";
     if (celebSec) {
       celebSec.style.display = "block";
       celebSec.style.animation = "fadeInScale 0.4s ease forwards";
+      resetCelebrationSlide();
       celebSec.scrollIntoView({ behavior: "smooth" });
     }
 
     try {
       showToast("👑 Identity verified! Welcome Queen Sandhiya! 💕✨");
-      playSparkleChime();
       triggerCelebrationConfetti(70);
     } catch (e) {
       console.warn("Celebration effect error:", e);
     }
+
+    // Auto-play background music on successful login
+    startMusic();
 
   } else {
     // FAILED ATTEMPT
@@ -224,8 +227,65 @@ if (passwordInput) {
 }
 
 // ============================================================================
-// 2. CELEBRATION SECTION & INTERACTIVE CANDLE
+// 2. CELEBRATION SECTION & INTERACTIVE CANDLE ("LIGHTS OUT" SURPRISE)
 // ============================================================================
+function playLightSwitchSound() {
+  try {
+    if (!audioContext && (window.AudioContext || window.webkitAudioContext)) {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioContext && audioContext.state === "suspended") {
+      audioContext.resume().catch(() => {});
+    }
+    if (!audioContext) return;
+    const now = audioContext.currentTime;
+
+    // Crisp light switch click
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(1100, now);
+    osc.frequency.setValueAtTime(420, now + 0.012);
+    gain.gain.setValueAtTime(0.5, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
+    osc.start(now);
+    osc.stop(now + 0.04);
+  } catch (_) {}
+}
+
+let blackoutTimer = null;
+
+function resetCelebrationSlide() {
+  candleExtinguished = false;
+  if (candleFlame) candleFlame.classList.remove("extinguished");
+  if (blowBtn) blowBtn.textContent = "Blow Out Candle 💨";
+
+  if (blackoutTimer) {
+    clearTimeout(blackoutTimer);
+    blackoutTimer = null;
+  }
+
+  // Hide blackout overlay completely
+  const blackout = document.getElementById("blackout-overlay");
+  const blackoutContent = document.getElementById("blackout-content");
+  if (blackoutContent) blackoutContent.classList.remove("is-visible");
+  if (blackout) {
+    blackout.classList.remove("is-active");
+    blackout.style.display = "none";
+  }
+
+  // Hide message box until lights are turned on
+  const revealBox = document.getElementById("celebration-reveal-box");
+  if (revealBox) revealBox.style.display = "none";
+
+  const instructionSubtitle = document.getElementById("cake-instruction-subtitle");
+  if (instructionSubtitle) {
+    instructionSubtitle.textContent = "Make a special wish and blow out the candle to reveal your birthday message! 💕";
+  }
+}
+
 function toggleCandle() {
   if (!candleExtinguished) {
     candleExtinguished = true;
@@ -234,9 +294,25 @@ function toggleCandle() {
     setTimeout(() => smokePuff.classList.remove("rise"), 1800);
     blowBtn.textContent = "Relight Candle 🕯️";
 
-    playSparkleChime();
-    triggerCelebrationConfetti(90);
-    showToast("🎉 WISH MADE! May your 20s be magical, Sandhiya! ✨❤️");
+    // Immediate pitch black full screen blackout
+    const blackout = document.getElementById("blackout-overlay");
+    const blackoutContent = document.getElementById("blackout-content");
+
+    if (blackout) {
+      blackout.style.display = "flex";
+      blackout.classList.remove("is-active");
+      if (blackoutContent) blackoutContent.classList.remove("is-visible");
+      void blackout.offsetWidth;
+      blackout.classList.add("is-active");
+
+      // In the dark, reveal the glowing "Turn On Light" button after 5 seconds (5000ms)
+      if (blackoutTimer) clearTimeout(blackoutTimer);
+      blackoutTimer = setTimeout(() => {
+        if (blackoutContent) {
+          blackoutContent.classList.add("is-visible");
+        }
+      }, 5000);
+    }
   } else {
     candleExtinguished = false;
     candleFlame.classList.remove("extinguished");
@@ -245,12 +321,48 @@ function toggleCandle() {
   }
 }
 
+// "Turn On Light 💡" Button Trigger: Instantly snaps back to bright screen with message (ZERO DELAY)
+const turnOnLightBtn = document.getElementById("turn-on-light-btn");
+if (turnOnLightBtn) {
+  turnOnLightBtn.addEventListener("click", () => {
+    // Play light switch click sound immediately
+    playLightSwitchSound();
+
+    // Instantly dismiss blackout overlay (zero lag/delay)
+    const blackout = document.getElementById("blackout-overlay");
+    const blackoutContent = document.getElementById("blackout-content");
+    if (blackoutContent) blackoutContent.classList.remove("is-visible");
+    if (blackout) {
+      blackout.classList.remove("is-active");
+      blackout.style.display = "none";
+    }
+
+    // Immediately reveal heartfelt message on the bright card
+    const revealBox = document.getElementById("celebration-reveal-box");
+    if (revealBox) {
+      revealBox.style.display = "block";
+      revealBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    const instructionSubtitle = document.getElementById("cake-instruction-subtitle");
+    if (instructionSubtitle) {
+      instructionSubtitle.textContent = "Lights are on & your twenties are shining bright, Queen! ✨💕";
+    }
+
+    // Immediate celebration audio & confetti burst
+    playSparkleChime();
+    triggerCelebrationConfetti(120);
+    showToast("💡 Lights on! Happy 20th Birthday, Sandhiya! ✨❤️");
+  });
+}
+
 if (cakeWrapper) cakeWrapper.addEventListener("click", toggleCandle);
 if (blowBtn) blowBtn.addEventListener("click", toggleCandle);
 
 // Transition from Celebration to Game
 if (openGameBtn) {
   openGameBtn.addEventListener("click", () => {
+    document.body.classList.remove("candle-dark-mode");
     celebrationSection.style.display = "none";
     gameSection.style.display = "block";
     gameSection.scrollIntoView({ behavior: "smooth" });
@@ -263,6 +375,11 @@ if (backToLetterBtn) {
   backToLetterBtn.addEventListener("click", () => {
     gameSection.style.display = "none";
     celebrationSection.style.display = "block";
+    if (candleExtinguished) {
+      document.body.classList.add("candle-dark-mode");
+      const revealBox = document.getElementById("celebration-reveal-box");
+      if (revealBox) revealBox.style.display = "block";
+    }
     celebrationSection.scrollIntoView({ behavior: "smooth" });
   });
 }
@@ -461,7 +578,7 @@ function enableRpsButtons(enabled) {
 const replayGameBtn = document.getElementById("replay-game-btn");
 const restartAllBtn = document.getElementById("restart-all-btn");
 
-// Final Surprise Button Trigger (from Burnt Letter to Slide 5: 3D Cake & Runaway Yes)
+// Final Surprise Button Trigger (from Burnt Letter to Slide 5: The Golden Fortune Cookie & Runaway Yes)
 const finalSurpriseBtn = document.getElementById("final-surprise-btn");
 if (finalSurpriseBtn) {
   finalSurpriseBtn.addEventListener("click", () => {
@@ -469,25 +586,12 @@ if (finalSurpriseBtn) {
     const slide5 = document.getElementById("slide5-surprise");
     if (burntSection) burntSection.style.display = "none";
 
-    // Crucial: Turn OFF background "uyire un uyirena" ringtone!
-    if (bgAudio) {
-      try {
-        bgAudio.pause();
-        isMusicPlaying = false;
-        if (musicBtn) {
-          musicBtn.classList.remove("playing");
-          const label = musicBtn.querySelector(".music-btn-text");
-          if (label) label.textContent = "Play Music";
-        }
-      } catch (_) {}
-    }
-
     if (slide5) {
       slide5.style.display = "block";
       slide5.scrollIntoView({ behavior: "smooth" });
       triggerCelebrationConfetti(90);
       playSparkleChime();
-      showToast("🎂 Welcome to your final surprise! Cut your cake Queen! 💖✨");
+      showToast("🍪 Break open your warm birthday choco-chip cookie, Queen! 💖✨");
       initSlide5Experience();
     }
   });
@@ -536,6 +640,7 @@ if (replayGameBtn) {
     gameStatusBox.className = "game-status-box";
     gameStatusText.textContent = "Choose Rock, Paper, or Scissors! 💖";
     gameSection.scrollIntoView({ behavior: "smooth" });
+    startMusic();
   });
 }
 
@@ -576,15 +681,17 @@ if (restartAllBtn) {
     }
     gameSection.style.display = "none";
     celebrationSection.style.display = "block";
+    resetCelebrationSlide();
     celebrationSection.scrollIntoView({ behavior: "smooth" });
+    startMusic();
     showToast("💌 Back to the birthday message!");
   });
 }
 
 // ============================================================================
-// 4. AUDIO SYSTEM: MP3 WITH PROCEDURAL WEB AUDIO API SYNTHESIZER
+// 4. AUDIO SYSTEM: MP3 CONTROLLER WITH AUTOPLAY FALLBACK
 // ============================================================================
-if (bgAudio) {
+if (bgAudio && !bgAudio.src.includes(BIRTHDAY_CONFIG.audioPath)) {
   bgAudio.src = BIRTHDAY_CONFIG.audioPath;
 }
 
@@ -603,40 +710,60 @@ function toggleMusic() {
 }
 
 function startMusic() {
+  if (!bgAudio) return;
+
+  // Stop any procedural synth notes if running
+  stopSynthMusicBox();
+
+  bgAudio.volume = 0.8;
   const playPromise = bgAudio.play();
 
   if (playPromise !== undefined) {
     playPromise
       .then(() => {
-        setMusicPlayingState(true, "Music Playing");
+        setMusicPlayingState(true, "Audio Playing");
       })
       .catch((err) => {
-        // Fall back to Web Audio music-box synth
-        startSynthMusicBox();
-        setMusicPlayingState(true, "Melody Playing");
+        console.warn("Autoplay was prevented or audio failed to load:", err);
+        setMusicPlayingState(false, "Play Audio");
+
+        // If autoplay was blocked for any reason, trigger it on the user's very next click/touch
+        const unlockAudio = () => {
+          if (!isAudioPlaying) {
+            bgAudio.play().then(() => {
+              setMusicPlayingState(true, "Audio Playing");
+            }).catch(() => {});
+          }
+          document.removeEventListener("click", unlockAudio);
+          document.removeEventListener("touchstart", unlockAudio);
+        };
+        document.addEventListener("click", unlockAudio, { once: true });
+        document.addEventListener("touchstart", unlockAudio, { once: true });
       });
-  } else {
-    startSynthMusicBox();
-    setMusicPlayingState(true, "Melody Playing");
   }
 }
 
 function stopMusic() {
-  bgAudio.pause();
+  if (bgAudio) {
+    try {
+      bgAudio.pause();
+    } catch (_) {}
+  }
   stopSynthMusicBox();
-  setMusicPlayingState(false, "Play Music");
+  setMusicPlayingState(false, "Play Audio");
 }
 
 function setMusicPlayingState(playing, label) {
   isAudioPlaying = playing;
+  if (!musicBtn) return;
   if (playing) {
     musicBtn.classList.add("is-playing");
-    musicIcon.textContent = "🔊";
-    musicLabel.textContent = label || "Audio Playing";
+    if (musicIcon) musicIcon.textContent = "🔊";
+    if (musicLabel) musicLabel.textContent = label || "Audio Playing";
   } else {
     musicBtn.classList.remove("is-playing");
-    musicIcon.textContent = "🎵";
-    musicLabel.textContent = "Play Audio";
+    if (musicIcon) musicIcon.textContent = "🎵";
+    if (musicLabel) musicLabel.textContent = "Play Audio";
   }
 }
 
@@ -704,21 +831,64 @@ function stopSynthMusicBox() {
 function playChimeTone(frequency, duration) {
   if (!audioContext) return;
   try {
+    const now = audioContext.currentTime;
+
+    // Fundamental Bell Tone
+    const osc1 = audioContext.createOscillator();
+    const gain1 = audioContext.createGain();
+    osc1.type = "sine";
+    osc1.frequency.setValueAtTime(frequency, now);
+
+    gain1.gain.setValueAtTime(0.001, now);
+    gain1.gain.linearRampToValueAtTime(0.18, now + 0.02);
+    gain1.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+    osc1.connect(gain1);
+    gain1.connect(audioContext.destination);
+
+    // Sweet Celesta / Music-Box Harmonic Shimmer (2x Octave)
+    const osc2 = audioContext.createOscillator();
+    const gain2 = audioContext.createGain();
+    osc2.type = "triangle";
+    osc2.frequency.setValueAtTime(frequency * 2, now);
+
+    gain2.gain.setValueAtTime(0.001, now);
+    gain2.gain.linearRampToValueAtTime(0.06, now + 0.015);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + duration * 0.55);
+
+    osc2.connect(gain2);
+    gain2.connect(audioContext.destination);
+
+    osc1.start(now);
+    osc2.start(now);
+    osc1.stop(now + duration);
+    osc2.stop(now + duration * 0.55);
+  } catch (e) {}
+}
+
+function playSliceCrunchSound() {
+  if (!audioContext) {
+    try {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (_) {}
+  }
+  if (!audioContext) return;
+  try {
+    const now = audioContext.currentTime;
     const osc = audioContext.createOscillator();
     const gain = audioContext.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(840 + Math.random() * 260, now);
+    osc.frequency.exponentialRampToValueAtTime(320, now + 0.09);
 
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(frequency, audioContext.currentTime);
-
-    gain.gain.setValueAtTime(0.001, audioContext.currentTime);
-    gain.gain.linearRampToValueAtTime(0.18, audioContext.currentTime + 0.04);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+    gain.gain.setValueAtTime(0.05, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
 
     osc.connect(gain);
     gain.connect(audioContext.destination);
 
-    osc.start();
-    osc.stop(audioContext.currentTime + duration);
+    osc.start(now);
+    osc.stop(now + 0.09);
   } catch (e) {}
 }
 
@@ -770,7 +940,7 @@ function playBuzzTone() {
 const glitterCanvas = document.getElementById("glitter-canvas");
 const gCtx = glitterCanvas.getContext("2d");
 let glitterParticles = [];
-const GLITTER_COUNT = 210;
+const GLITTER_COUNT = 260;
 
 function resizeGlitterCanvas() {
   glitterCanvas.width = window.innerWidth;
@@ -787,15 +957,15 @@ class GlitterParticle {
   reset(x, y) {
     this.x = x !== undefined ? x : Math.random() * glitterCanvas.width;
     this.y = y !== undefined ? y : Math.random() * glitterCanvas.height;
-    this.size = Math.random() * 4.6 + 1.8;
-    this.speedY = Math.random() * 0.7 + 0.25;
-    this.speedX = (Math.random() - 0.5) * 0.4;
+    this.size = Math.random() * 4.8 + 1.6;
+    this.speedY = Math.random() * 0.65 + 0.2;
+    this.speedX = (Math.random() - 0.5) * 0.35;
     this.alpha = Math.random() * 0.75 + 0.25;
-    this.alphaSpeed = (Math.random() * 0.03 + 0.012) * (Math.random() > 0.5 ? 1 : -1);
+    this.alphaSpeed = (Math.random() * 0.025 + 0.01) * (Math.random() > 0.5 ? 1 : -1);
     this.twinklePhase = Math.random() * Math.PI * 2;
-    this.colorType = Math.floor(Math.random() * 6);
+    this.colorType = Math.floor(Math.random() * 8);
     this.rotation = Math.random() * Math.PI * 2;
-    this.rotationSpeed = (Math.random() - 0.5) * 0.035;
+    this.rotationSpeed = (Math.random() - 0.5) * 0.03;
     
     const rand = Math.random();
     if (rand < 0.35) this.type = "flare"; // Radiant 8-ray diamond sparkle
@@ -808,7 +978,7 @@ class GlitterParticle {
     this.y -= this.speedY;
     this.x += this.speedX;
     this.rotation += this.rotationSpeed;
-    this.twinklePhase += 0.07;
+    this.twinklePhase += 0.06;
     
     // Dynamic twinkling pulse
     this.alpha += this.alphaSpeed;
@@ -830,17 +1000,19 @@ class GlitterParticle {
     const dynamicAlpha = Math.max(0.12, Math.min(1, this.alpha + Math.sin(this.twinklePhase) * 0.35));
     ctx.globalAlpha = dynamicAlpha;
 
-    // Live Shiny Pink & White Glitter Palette
+    // Luxurious Champagne Gold, Diamond & Electric Rose Palette
     let fill = "#ffffff";
     if (this.colorType === 0) fill = "#ffffff"; // Diamond Brilliant White
-    else if (this.colorType === 1) fill = "#ffffff"; // Pure White Sparkle
-    else if (this.colorType === 2) fill = "#ffb6d2"; // Sweet Baby Pink
-    else if (this.colorType === 3) fill = "#ff69b4"; // Radiant Hot Pink
-    else if (this.colorType === 4) fill = "#ffd6e7"; // Cotton Candy White
-    else if (this.colorType === 5) fill = "#fff1f8"; // Pearlescent White
+    else if (this.colorType === 1) fill = "#ffd700"; // 24K Champagne Gold
+    else if (this.colorType === 2) fill = "#ffe082"; // Warm Golden Starlight
+    else if (this.colorType === 3) fill = "#ff1493"; // Electric Pink
+    else if (this.colorType === 4) fill = "#ff69b4"; // Radiant Hot Pink
+    else if (this.colorType === 5) fill = "#e0aaff"; // Celestial Amethyst
+    else if (this.colorType === 6) fill = "#ff85a2"; // Rose Gold
+    else if (this.colorType === 7) fill = "#fff3e0"; // Pearlescent White
 
     ctx.fillStyle = fill;
-    ctx.shadowBlur = this.size * 3.2;
+    ctx.shadowBlur = this.size * 3.6;
     ctx.shadowColor = fill;
 
     if (this.type === "flare") {
@@ -915,11 +1087,11 @@ for (let i = 0; i < GLITTER_COUNT; i++) {
   glitterParticles.push(new GlitterParticle());
 }
 
-// Sparkle trail following cursor / touch
+// Sparkle trail following cursor on laptop
 window.addEventListener("pointermove", (e) => {
-  if (Math.random() > 0.25) {
+  if (Math.random() > 0.45) {
     glitterParticles.push(new GlitterParticle(e.clientX, e.clientY));
-    if (glitterParticles.length > GLITTER_COUNT + 50) {
+    if (glitterParticles.length > GLITTER_COUNT + 40) {
       glitterParticles.shift();
     }
   }
@@ -1107,531 +1279,191 @@ function showToast(message) {
   }, 3200);
 }
 
-// Auto-focus username input on load
+// Auto-focus username input on load & prepare celebration slide state
 document.addEventListener("DOMContentLoaded", () => {
   if (usernameInput) {
     usernameInput.focus();
   }
+  resetCelebrationSlide();
 });
 
 // ============================================================================
-// 8. SLIDE 5: 3D INTERACTIVE CAKE, KNIFE CUTTING & RUNAWAY YES BUTTON
+// 8. SLIDE 5: THE GOLDEN BIRTHDAY FORTUNE COOKIE & RUNAWAY YES BUTTON
 // ============================================================================
-let cake3dScene = null;
-let cake3dCamera = null;
-let cake3dRenderer = null;
-let cakeRootGroup = null;
-let cakeSliceGroup = null;
-let cakeAnimFrameId = null;
-let isCakeCut = false;
-let sliceOffset = 0;
-let targetSliceOffset = 0;
-let isSlide5MusicPlaying = false;
-let slide5MusicTimer = null;
+let isCookieCracked = false;
 let runawayTimer = null;
 let runawaySecondsLeft = 20;
 let isRunawayActive = false;
 let runawayPointerListener = null;
-let isKnifeDragging = false;
-let knifeStartY = 0;
-let knifeCurrentY = 0;
 
 /**
- * Initializes the entire Slide 5 experience
+ * Initializes the Slide 5 Choco-Chip Cookie experience with custom hammer cursor
  */
 function initSlide5Experience() {
-  // Start Happy Birthday tune
-  startSlide5Music();
+  isCookieCracked = false;
 
-  // Initialize Three.js 3D Cake
+  const cookieBox = document.getElementById("cookie-interactive");
+  const fortuneSlip = document.getElementById("fortune-slip");
+  const proceedBtn = document.getElementById("fortune-proceed-btn");
+  const hammer = document.getElementById("cookie-hammer");
+
+  if (cookieBox) {
+    cookieBox.classList.remove("is-cracked");
+    cookieBox.onclick = crackFortuneCookie;
+
+    // Interactive Floating Hammer Cursor tracking
+    if (hammer) {
+      hammer.style.opacity = "0";
+      hammer.classList.remove("is-striking");
+
+      cookieBox.onpointermove = (e) => {
+        if (isCookieCracked) {
+          hammer.style.opacity = "0";
+          return;
+        }
+        const rect = cookieBox.getBoundingClientRect();
+        const x = e.clientX - rect.left + 4;
+        const y = e.clientY - rect.top - 32;
+        hammer.style.opacity = "1";
+        hammer.style.transform = `translate(${x}px, ${y}px) rotate(-15deg)`;
+      };
+
+      cookieBox.onpointerleave = () => {
+        hammer.style.opacity = "0";
+      };
+
+      cookieBox.onpointerdown = () => {
+        if (!isCookieCracked) {
+          hammer.classList.add("is-striking");
+        }
+      };
+
+      window.addEventListener("pointerup", () => {
+        if (hammer) hammer.classList.remove("is-striking");
+      });
+    }
+  }
+
+  if (fortuneSlip) {
+    fortuneSlip.style.display = "none";
+  }
+
+  if (proceedBtn) {
+    proceedBtn.onclick = transitionFromFortuneToKidding;
+  }
+}
+
+/**
+ * Sound effect: Satisfying hammer whack & crispy golden biscuit crunch
+ */
+function playCookieCrackSound() {
+  try {
+    if (!audioContext && (window.AudioContext || window.webkitAudioContext)) {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioContext && audioContext.state === "suspended") {
+      audioContext.resume().catch(() => {});
+    }
+    if (!audioContext) return;
+    const now = audioContext.currentTime;
+
+    // Hammer impact 'thump'
+    const whackOsc = audioContext.createOscillator();
+    const whackGain = audioContext.createGain();
+    whackOsc.type = "sine";
+    whackOsc.frequency.setValueAtTime(260, now);
+    whackOsc.frequency.exponentialRampToValueAtTime(75, now + 0.08);
+    whackGain.gain.setValueAtTime(0.65, now);
+    whackGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+    whackOsc.connect(whackGain);
+    whackGain.connect(audioContext.destination);
+    whackOsc.start(now);
+    whackOsc.stop(now + 0.08);
+
+    // Biscuit noise crack
+    const bufferSize = Math.floor(audioContext.sampleRate * 0.09);
+    const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (audioContext.sampleRate * 0.016));
+    }
+    const noise = audioContext.createBufferSource();
+    noise.buffer = buffer;
+
+    const filter = audioContext.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.frequency.setValueAtTime(1400, now);
+    filter.Q.setValueAtTime(3.0, now);
+
+    const gain = audioContext.createGain();
+    gain.gain.setValueAtTime(0.5, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioContext.destination);
+    noise.start(now);
+
+    // Warm snap tone
+    const osc = audioContext.createOscillator();
+    const oscGain = audioContext.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(380, now);
+    osc.frequency.exponentialRampToValueAtTime(110, now + 0.07);
+    oscGain.gain.setValueAtTime(0.35, now);
+    oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+    osc.connect(oscGain);
+    oscGain.connect(audioContext.destination);
+    osc.start(now);
+    osc.stop(now + 0.07);
+  } catch (e) {}
+}
+
+/**
+ * Breaks open the choco-chip cookie with hammer strike, revealing the secret message note
+ */
+function crackFortuneCookie() {
+  if (isCookieCracked) return;
+  isCookieCracked = true;
+
+  const cookieBox = document.getElementById("cookie-interactive");
+  const fortuneSlip = document.getElementById("fortune-slip");
+  const hammer = document.getElementById("cookie-hammer");
+
+  if (cookieBox) {
+    cookieBox.classList.add("is-cracked");
+  }
+
+  if (hammer) {
+    hammer.style.opacity = "0";
+    hammer.classList.remove("is-striking");
+  }
+
+  // Play realistic hammer impact + cookie crunch sound
+  playCookieCrackSound();
+
+  // Magical chime + burst of celebration confetti
   setTimeout(() => {
-    init3DCake();
-  }, 100);
-
-  // Bind Knife Controller
-  setupInteractiveKnife();
-
-  // Bind "I was kidding" button in Part 2
-  const kiddingBtn = document.getElementById("kidding-btn");
-  if (kiddingBtn) {
-    kiddingBtn.onclick = handleKiddingClick;
-  }
-
-  // Bind Slide 5 music button
-  const s5MusicBtn = document.getElementById("slide5-music-btn");
-  if (s5MusicBtn) {
-    s5MusicBtn.onclick = toggleSlide5Music;
-  }
-}
-
-/**
- * Three.js 3D Three-Layer Birthday Cake
- */
-function init3DCake() {
-  const container = document.getElementById("cake3d-viewport");
-  const canvas = document.getElementById("cake3d-canvas");
-  if (!container || !canvas || typeof THREE === "undefined") return;
-
-  // Cleanup existing if already running
-  if (cakeAnimFrameId) {
-    cancelAnimationFrame(cakeAnimFrameId);
-    cakeAnimFrameId = null;
-  }
-
-  const width = container.clientWidth || 400;
-  const height = container.clientHeight || 420;
-
-  // Scene & Camera
-  cake3dScene = new THREE.Scene();
-  cake3dCamera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
-  cake3dCamera.position.set(0, 2.3, 5.8);
-  cake3dCamera.lookAt(0, 0.45, 0);
-
-  // Renderer
-  cake3dRenderer = new THREE.WebGLRenderer({
-    canvas: canvas,
-    alpha: true,
-    antialias: true,
-    powerPreference: "high-performance"
-  });
-  cake3dRenderer.setSize(width, height);
-  cake3dRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  cake3dRenderer.shadowMap.enabled = true;
-  cake3dRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-  // Lighting
-  const ambientLight = new THREE.AmbientLight(0xfff5f8, 0.95);
-  cake3dScene.add(ambientLight);
-
-  const mainLight = new THREE.DirectionalLight(0xffffff, 1.15);
-  mainLight.position.set(4, 7, 5);
-  mainLight.castShadow = true;
-  mainLight.shadow.mapSize.width = 1024;
-  mainLight.shadow.mapSize.height = 1024;
-  cake3dScene.add(mainLight);
-
-  const goldRimLight = new THREE.PointLight(0xffd700, 0.75, 12);
-  goldRimLight.position.set(-3.5, 3.2, 2.5);
-  cake3dScene.add(goldRimLight);
-
-  const pinkFillLight = new THREE.PointLight(0xff69b4, 0.55, 10);
-  pinkFillLight.position.set(3, 1, 3.5);
-  cake3dScene.add(pinkFillLight);
-
-  // Master Root Group
-  cakeRootGroup = new THREE.Group();
-  cake3dScene.add(cakeRootGroup);
-
-  // Materials
-  const goldMaterial = new THREE.MeshStandardMaterial({
-    color: 0xffd700,
-    metalness: 0.9,
-    roughness: 0.18,
-    envMapIntensity: 1.2
-  });
-
-  const ceramicPlateMaterial = new THREE.MeshStandardMaterial({
-    color: 0xffffff,
-    metalness: 0.08,
-    roughness: 0.12
-  });
-
-  const tier1Material = new THREE.MeshStandardMaterial({
-    color: 0xffb5cc, // Pastel candy pink
-    roughness: 0.28,
-    metalness: 0.04
-  });
-
-  const tier2Material = new THREE.MeshStandardMaterial({
-    color: 0xffffff, // White cream frosting
-    roughness: 0.18,
-    metalness: 0.04
-  });
-
-  const tier3Material = new THREE.MeshStandardMaterial({
-    color: 0xff7398, // Strawberry blush pink
-    roughness: 0.26,
-    metalness: 0.04
-  });
-
-  const pearlWhiteMaterial = new THREE.MeshStandardMaterial({
-    color: 0xffffff,
-    roughness: 0.1,
-    metalness: 0.2
-  });
-
-  const pearlPinkMaterial = new THREE.MeshStandardMaterial({
-    color: 0xffccd9,
-    roughness: 0.1,
-    metalness: 0.2
-  });
-
-  const spongeInsideMaterial = new THREE.MeshStandardMaterial({
-    color: 0xff8fa3, // Sponge cake inside
-    roughness: 0.65,
-    metalness: 0.0
-  });
-
-  // 1. Ceramic Cake Stand with Gold Trim
-  const standPlate = new THREE.Mesh(
-    new THREE.CylinderGeometry(2.35, 2.35, 0.14, 48),
-    ceramicPlateMaterial
-  );
-  standPlate.position.y = -0.06;
-  standPlate.receiveShadow = true;
-  cakeRootGroup.add(standPlate);
-
-  const goldPlateRim = new THREE.Mesh(
-    new THREE.TorusGeometry(2.36, 0.045, 16, 64),
-    goldMaterial
-  );
-  goldPlateRim.rotation.x = Math.PI / 2;
-  goldPlateRim.position.y = -0.01;
-  cakeRootGroup.add(goldPlateRim);
-
-  const standPedestal = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.85, 1.45, 0.28, 36),
-    new THREE.MeshStandardMaterial({ color: 0xffe4ed, roughness: 0.3 })
-  );
-  standPedestal.position.y = -0.24;
-  cakeRootGroup.add(standPedestal);
-
-  // 2. Main Cake Body (300 degrees) & Wedge Slice (60 degrees)
-  const mainCakeGroup = new THREE.Group();
-  cakeSliceGroup = new THREE.Group();
-  cakeRootGroup.add(mainCakeGroup);
-  cakeRootGroup.add(cakeSliceGroup);
-
-  const wedgeAngle = Math.PI / 3; // 60 degrees cut wedge
-  const mainAngle = Math.PI * 2 - wedgeAngle;
-  const startAngle = wedgeAngle / 2;
-
-  // Tier 1: Bottom Tier
-  const t1Radius = 1.7;
-  const t1Height = 0.65;
-  const t1Y = 0.33;
-
-  const t1Main = new THREE.Mesh(
-    new THREE.CylinderGeometry(t1Radius, t1Radius, t1Height, 36, 1, false, startAngle, mainAngle),
-    tier1Material
-  );
-  t1Main.position.y = t1Y;
-  t1Main.castShadow = true;
-  t1Main.receiveShadow = true;
-  mainCakeGroup.add(t1Main);
-
-  const t1Slice = new THREE.Mesh(
-    new THREE.CylinderGeometry(t1Radius, t1Radius, t1Height, 16, 1, false, -startAngle, wedgeAngle),
-    tier1Material
-  );
-  t1Slice.position.y = t1Y;
-  t1Slice.castShadow = true;
-  cakeSliceGroup.add(t1Slice);
-
-  // Tier 2: Middle Tier
-  const t2Radius = 1.25;
-  const t2Height = 0.58;
-  const t2Y = 0.94;
-
-  const t2Main = new THREE.Mesh(
-    new THREE.CylinderGeometry(t2Radius, t2Radius, t2Height, 36, 1, false, startAngle, mainAngle),
-    tier2Material
-  );
-  t2Main.position.y = t2Y;
-  t2Main.castShadow = true;
-  mainCakeGroup.add(t2Main);
-
-  const t2Slice = new THREE.Mesh(
-    new THREE.CylinderGeometry(t2Radius, t2Radius, t2Height, 16, 1, false, -startAngle, wedgeAngle),
-    tier2Material
-  );
-  t2Slice.position.y = t2Y;
-  t2Slice.castShadow = true;
-  cakeSliceGroup.add(t2Slice);
-
-  // Tier 3: Top Tier
-  const t3Radius = 0.82;
-  const t3Height = 0.52;
-  const t3Y = 1.49;
-
-  const t3Main = new THREE.Mesh(
-    new THREE.CylinderGeometry(t3Radius, t3Radius, t3Height, 36, 1, false, startAngle, mainAngle),
-    tier3Material
-  );
-  t3Main.position.y = t3Y;
-  t3Main.castShadow = true;
-  mainCakeGroup.add(t3Main);
-
-  const t3Slice = new THREE.Mesh(
-    new THREE.CylinderGeometry(t3Radius, t3Radius, t3Height, 16, 1, false, -startAngle, wedgeAngle),
-    tier3Material
-  );
-  t3Slice.position.y = t3Y;
-  t3Slice.castShadow = true;
-  cakeSliceGroup.add(t3Slice);
-
-  // Gold Piping Rings between Tiers
-  function addGoldRing(radius, y, parentGroup, angleStart, angleLen) {
-    const ring = new THREE.Mesh(
-      new THREE.TorusGeometry(radius, 0.04, 12, 48, angleLen),
-      goldMaterial
-    );
-    ring.rotation.x = Math.PI / 2;
-    ring.rotation.z = angleStart;
-    ring.position.y = y;
-    parentGroup.add(ring);
-  }
-
-  addGoldRing(t1Radius + 0.02, 0.01, mainCakeGroup, startAngle, mainAngle);
-  addGoldRing(t1Radius + 0.02, 0.01, cakeSliceGroup, -startAngle, wedgeAngle);
-
-  addGoldRing(t2Radius + 0.02, t1Y + t1Height / 2, mainCakeGroup, startAngle, mainAngle);
-  addGoldRing(t2Radius + 0.02, t1Y + t1Height / 2, cakeSliceGroup, -startAngle, wedgeAngle);
-
-  addGoldRing(t3Radius + 0.02, t2Y + t2Height / 2, mainCakeGroup, startAngle, mainAngle);
-  addGoldRing(t3Radius + 0.02, t2Y + t2Height / 2, cakeSliceGroup, -startAngle, wedgeAngle);
-
-  // Pearls along Tier Edges
-  function addPearls(radius, y, count, parentGroup, angleStart, angleLen) {
-    const pearlGeo = new THREE.SphereGeometry(0.055, 12, 12);
-    for (let i = 0; i < count; i++) {
-      const angle = angleStart + (i / count) * angleLen;
-      const pearl = new THREE.Mesh(
-        pearlGeo,
-        i % 2 === 0 ? pearlWhiteMaterial : pearlPinkMaterial
-      );
-      pearl.position.set(
-        Math.cos(angle) * (radius - 0.03),
-        y,
-        Math.sin(angle) * (radius - 0.03)
-      );
-      parentGroup.add(pearl);
-    }
-  }
-
-  addPearls(t1Radius, t1Y + t1Height / 2 + 0.02, 28, mainCakeGroup, startAngle, mainAngle);
-  addPearls(t1Radius, t1Y + t1Height / 2 + 0.02, 7, cakeSliceGroup, -startAngle, wedgeAngle);
-
-  addPearls(t2Radius, t2Y + t2Height / 2 + 0.02, 22, mainCakeGroup, startAngle, mainAngle);
-  addPearls(t2Radius, t2Y + t2Height / 2 + 0.02, 5, cakeSliceGroup, -startAngle, wedgeAngle);
-
-  addPearls(t3Radius, t3Y + t3Height / 2 + 0.02, 16, mainCakeGroup, startAngle, mainAngle);
-  addPearls(t3Radius, t3Y + t3Height / 2 + 0.02, 4, cakeSliceGroup, -startAngle, wedgeAngle);
-
-  // Inside Sponge & Cream Cut Face Covers for Slice
-  const cutFaceGeo1 = new THREE.PlaneGeometry(t1Radius, t1Height);
-  const cutFace1A = new THREE.Mesh(cutFaceGeo1, spongeInsideMaterial);
-  cutFace1A.position.set(t1Radius / 2 * Math.cos(startAngle), t1Y, t1Radius / 2 * Math.sin(startAngle));
-  cutFace1A.rotation.y = -startAngle + Math.PI / 2;
-  mainCakeGroup.add(cutFace1A);
-
-  const cutFace1B = new THREE.Mesh(cutFaceGeo1, spongeInsideMaterial);
-  cutFace1B.position.set(t1Radius / 2 * Math.cos(-startAngle), t1Y, t1Radius / 2 * Math.sin(-startAngle));
-  cutFace1B.rotation.y = startAngle + Math.PI / 2;
-  mainCakeGroup.add(cutFace1B);
-
-  // Inside slice planes
-  const sliceFaceA = new THREE.Mesh(cutFaceGeo1, spongeInsideMaterial);
-  sliceFaceA.position.set(t1Radius / 2 * Math.cos(startAngle), t1Y, t1Radius / 2 * Math.sin(startAngle));
-  sliceFaceA.rotation.y = -startAngle - Math.PI / 2;
-  cakeSliceGroup.add(sliceFaceA);
-
-  const sliceFaceB = new THREE.Mesh(cutFaceGeo1, spongeInsideMaterial);
-  sliceFaceB.position.set(t1Radius / 2 * Math.cos(-startAngle), t1Y, t1Radius / 2 * Math.sin(-startAngle));
-  sliceFaceB.rotation.y = startAngle - Math.PI / 2;
-  cakeSliceGroup.add(sliceFaceB);
-
-  // 3. Golden "Happy Birthday" Cake Topper Stick on Top Tier
-  const topperStem = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.035, 0.035, 0.75, 16),
-    goldMaterial
-  );
-  topperStem.position.set(0, t3Y + t3Height / 2 + 0.35, 0);
-  cakeRootGroup.add(topperStem);
-
-  // Topper Badge (Heart + Star Burst)
-  const topperBadge = new THREE.Mesh(
-    new THREE.TorusGeometry(0.36, 0.045, 16, 32),
-    goldMaterial
-  );
-  topperBadge.position.set(0, t3Y + t3Height / 2 + 0.72, 0);
-  cakeRootGroup.add(topperBadge);
-
-  const topperStar = new THREE.Mesh(
-    new THREE.OctahedronGeometry(0.18, 0),
-    goldMaterial
-  );
-  topperStar.position.set(0, t3Y + t3Height / 2 + 0.72, 0);
-  cakeRootGroup.add(topperStar);
-
-  // Base pearls around topper stick
-  for (let p = 0; p < 6; p++) {
-    const pAng = (p / 6) * Math.PI * 2;
-    const basePearl = new THREE.Mesh(
-      new THREE.SphereGeometry(0.045, 12, 12),
-      pearlWhiteMaterial
-    );
-    basePearl.position.set(
-      Math.cos(pAng) * 0.12,
-      t3Y + t3Height / 2 + 0.03,
-      Math.sin(pAng) * 0.12
-    );
-    cakeRootGroup.add(basePearl);
-  }
-
-  // Tilt & Pointer tracking
-  let targetRotationY = 0;
-  let targetRotationX = 0;
-
-  function handlePointerTilt(e) {
-    const rect = container.getBoundingClientRect();
-    const clientX = e.clientX || (e.touches && e.touches[0].clientX) || rect.left + rect.width / 2;
-    const clientY = e.clientY || (e.touches && e.touches[0].clientY) || rect.top + rect.height / 2;
-    const xNorm = ((clientX - rect.left) / rect.width) * 2 - 1;
-    const yNorm = ((clientY - rect.top) / rect.height) * 2 - 1;
-    targetRotationY = xNorm * 0.45;
-    targetRotationX = yNorm * 0.22;
-  }
-
-  container.addEventListener("pointermove", handlePointerTilt);
-  container.addEventListener("touchmove", handlePointerTilt, { passive: true });
-
-  // Resize handler
-  function handleCakeResize() {
-    if (!container || !cake3dRenderer || !cake3dCamera) return;
-    const w = container.clientWidth;
-    const h = container.clientHeight;
-    cake3dCamera.aspect = w / h;
-    cake3dCamera.updateProjectionMatrix();
-    cake3dRenderer.setSize(w, h);
-  }
-  window.addEventListener("resize", handleCakeResize);
-
-  // Render Loop
-  sliceOffset = 0;
-  targetSliceOffset = 0;
-  isCakeCut = false;
-
-  function renderCakeFrame() {
-    cakeAnimFrameId = requestAnimationFrame(renderCakeFrame);
-
-    // Smooth tilt towards pointer
-    cakeRootGroup.rotation.y += (targetRotationY - cakeRootGroup.rotation.y) * 0.05 + 0.002;
-    cakeRootGroup.rotation.x += (targetRotationX - cakeRootGroup.rotation.x) * 0.05;
-
-    // Smooth slice outward translation when cut
-    sliceOffset += (targetSliceOffset - sliceOffset) * 0.08;
-    if (cakeSliceGroup) {
-      cakeSliceGroup.position.z = sliceOffset * 1.1;
-      cakeSliceGroup.position.x = sliceOffset * 0.05;
-    }
-
-    // Slow gold topper twinkle
-    topperStar.rotation.y += 0.02;
-    topperBadge.rotation.z = Math.sin(Date.now() * 0.002) * 0.08;
-
-    cake3dRenderer.render(cake3dScene, cake3dCamera);
-  }
-
-  renderCakeFrame();
-}
-
-/**
- * Setup Draggable Pink Knife Controller
- */
-function setupInteractiveKnife() {
-  const knife = document.getElementById("interactive-knife");
-  const viewport = document.getElementById("cake3d-viewport");
-  if (!knife || !viewport) return;
-
-  let isDragging = false;
-  let startY = 0;
-  let currentY = 0;
-
-  function onPointerDown(e) {
-    if (isCakeCut) return;
-    isDragging = true;
-    knife.classList.add("is-dragging");
-    startY = e.clientY || (e.touches && e.touches[0].clientY);
-    currentY = startY;
-  }
-
-  function onPointerMove(e) {
-    if (!isDragging || isCakeCut) return;
-    const y = e.clientY || (e.touches && e.touches[0].clientY);
-    const deltaY = y - startY;
-
-    if (deltaY > 0) {
-      knife.style.transform = `translateY(${Math.min(deltaY, 180)}px) rotate(${deltaY * 0.08 - 6}deg)`;
-
-      // Trigger cut when dragged down across center (> 85px)
-      if (deltaY > 85 && !isCakeCut) {
-        completeCakeCut();
-      }
-    }
-  }
-
-  function onPointerUp() {
-    if (!isDragging) return;
-    isDragging = false;
-    knife.classList.remove("is-dragging");
-
-    if (!isCakeCut) {
-      knife.style.transform = "translateY(0) rotate(-6deg)";
-    }
-  }
-
-  knife.addEventListener("pointerdown", onPointerDown);
-  window.addEventListener("pointermove", onPointerMove);
-  window.addEventListener("pointerup", onPointerUp);
-
-  knife.addEventListener("touchstart", onPointerDown, { passive: true });
-  window.addEventListener("touchmove", onPointerMove, { passive: true });
-  window.addEventListener("touchend", onPointerUp);
-}
-
-/**
- * Executes the cake cut reaction & reveals Part 2
- */
-function completeCakeCut() {
-  if (isCakeCut) return;
-  isCakeCut = true;
-
-  // Animate slice outward
-  targetSliceOffset = 0.72;
-
-  // Sound & Celebration
-  playSparkleChime();
-  triggerCelebrationConfetti(85);
-
-  showToast("🎂 Cake cut! Happy 20th Birthday, Sandhiya! ✨🍰");
-
-  // Hide cut guide line
-  const guideLine = document.getElementById("cut-guide-line");
-  if (guideLine) guideLine.style.opacity = "0";
-
-  // Knife rests gracefully
-  const knife = document.getElementById("interactive-knife");
-  if (knife) {
-    knife.style.transition = "transform 0.5s ease-out";
-    knife.style.transform = "translate(-80px, 140px) rotate(-15deg)";
-  }
-
-  // After cake is cut -> automatically transition to next slide ("We were kidding ready for your final surprise")
+    playSparkleChime();
+    triggerCelebrationConfetti(110);
+  }, 120);
+
+  // Smoothly reveal prophecy note
   setTimeout(() => {
-    transitionFromCakeToKidding();
-  }, 1200);
+    if (fortuneSlip) {
+      fortuneSlip.style.display = "block";
+      fortuneSlip.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+    showToast("🍪 Cookie broken! Read your secret birthday message, Sandhiya! ✨📜");
+  }, 380);
 }
 
 /**
- * Transition from Cake Cutting to "We were kidding..." Slide
+ * Transition from Fortune Cookie Slide to "We were kidding..." Prank Slide
  */
-function transitionFromCakeToKidding() {
+function transitionFromFortuneToKidding() {
   const slide5 = document.getElementById("slide5-surprise");
   const slide6 = document.getElementById("slide6-kidding");
-
-  // Silence Happy Birthday tune immediately!
-  stopSlide5Music();
 
   if (slide5) slide5.style.display = "none";
   if (slide6) {
@@ -1751,7 +1583,8 @@ function startRunawayYesButton() {
 function handleYesButtonClick() {
   if (isRunawayActive) return;
 
-  // Cleanup Slide 5 & 6
+  // Cleanup Slide 5 & 6 and ensure background music is stopped
+  stopMusic();
   stopSlide5Music();
   if (cakeAnimFrameId) {
     cancelAnimationFrame(cakeAnimFrameId);
@@ -1766,8 +1599,7 @@ function handleYesButtonClick() {
     runawayPointerListener = null;
   }
 
-  // Celebration effects
-  playSparkleChime();
+  // Visual celebration effects
   triggerCelebrationConfetti(120);
 
   // Transition from Slide 6 to Slide 7 (Video Final Slide)
@@ -1780,7 +1612,7 @@ function handleYesButtonClick() {
     slide7.scrollIntoView({ behavior: "smooth" });
     showToast("🎬 Happy 20th Birthday, Sandhiya! 👑💖");
 
-    // Start video playback
+    // Start video playback cleanly
     startSurpriseVideo();
   }
 }
@@ -1789,6 +1621,7 @@ function handleYesButtonClick() {
  * Starts the Birthday Surprise Video Player
  */
 function startSurpriseVideo() {
+  stopMusic();
   const video = document.getElementById("surprise-video");
   const overlay = document.getElementById("video-play-overlay");
   const tapBtn = document.getElementById("tap-to-play-video-btn");
@@ -1818,116 +1651,8 @@ function startSurpriseVideo() {
   }
 }
 
-/**
- * Slide 5 Happy Birthday Melody Synthesizer (Web Audio API)
- */
-const HAPPY_BIRTHDAY_NOTES = [
-  { note: "G4", dur: 0.35 },
-  { note: "G4", dur: 0.35 },
-  { note: "A4", dur: 0.7 },
-  { note: "G4", dur: 0.7 },
-  { note: "C5", dur: 0.7 },
-  { note: "B4", dur: 1.2 },
-
-  { note: "G4", dur: 0.35 },
-  { note: "G4", dur: 0.35 },
-  { note: "A4", dur: 0.7 },
-  { note: "G4", dur: 0.7 },
-  { note: "D5", dur: 0.7 },
-  { note: "C5", dur: 1.2 },
-
-  { note: "G4", dur: 0.35 },
-  { note: "G4", dur: 0.35 },
-  { note: "G5", dur: 0.7 },
-  { note: "E5", dur: 0.7 },
-  { note: "C5", dur: 0.7 },
-  { note: "B4", dur: 0.7 },
-  { note: "A4", dur: 1.1 },
-
-  { note: "F5", dur: 0.35 },
-  { note: "F5", dur: 0.35 },
-  { note: "E5", dur: 0.7 },
-  { note: "C5", dur: 0.7 },
-  { note: "D5", dur: 0.7 },
-  { note: "C5", dur: 1.5 }
-];
-
-let slide5NoteIndex = 0;
-
-function playSlide5MelodyStep() {
-  if (!isSlide5MusicPlaying) return;
-
-  const step = HAPPY_BIRTHDAY_NOTES[slide5NoteIndex];
-  if (step && NOTE_FREQS[step.note]) {
-    playChimeTone(NOTE_FREQS[step.note], step.dur * 0.9);
-  }
-
-  const delay = (step ? step.dur : 0.6) * 620;
-  slide5NoteIndex = (slide5NoteIndex + 1) % HAPPY_BIRTHDAY_NOTES.length;
-  slide5MusicTimer = setTimeout(playSlide5MelodyStep, delay);
-}
-
-function startSlide5Music() {
-  if (isSlide5MusicPlaying) return;
-  isSlide5MusicPlaying = true;
-  slide5NoteIndex = 0;
-
-  // Turn OFF background "uyire un uyirena" ringtone!
-  if (bgAudio) {
-    try {
-      bgAudio.pause();
-      isMusicPlaying = false;
-      if (musicBtn) {
-        musicBtn.classList.remove("playing");
-        const label = musicBtn.querySelector(".music-btn-text");
-        if (label) label.textContent = "Play Music";
-      }
-    } catch (_) {}
-  }
-
-  try {
-    if (!audioContext && (window.AudioContext || window.webkitAudioContext)) {
-      audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioContext && audioContext.state === "suspended") {
-      audioContext.resume().catch(() => {});
-    }
-  } catch (e) {}
-
-  updateSlide5MusicStatus(true);
-  playSlide5MelodyStep();
-}
-
-function stopSlide5Music() {
-  isSlide5MusicPlaying = false;
-  if (slide5MusicTimer) {
-    clearTimeout(slide5MusicTimer);
-    slide5MusicTimer = null;
-  }
-  updateSlide5MusicStatus(false);
-}
-
-function toggleSlide5Music() {
-  if (isSlide5MusicPlaying) {
-    stopSlide5Music();
-  } else {
-    startSlide5Music();
-  }
-}
-
-function updateSlide5MusicStatus(playing) {
-  const statusSpan = document.getElementById("slide5-music-status");
-  const musicBtn = document.getElementById("slide5-music-btn");
-  if (statusSpan) {
-    statusSpan.textContent = playing
-      ? "Happy Birthday Melody: Playing 🎶"
-      : "Happy Birthday Melody: Muted 🔇";
-  }
-  if (musicBtn) {
-    if (playing) {
-      musicBtn.classList.remove("is-muted");
-    } else {
-      musicBtn.classList.add("is-muted");
-    }
-  }
-}
+// Slide 5 audio cleanups (replaced by ambient song)
+function startSlide5Music() {}
+function stopSlide5Music() {}
+function toggleSlide5Music() {}
+function updateSlide5MusicStatus() {}
