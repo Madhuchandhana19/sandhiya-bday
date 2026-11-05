@@ -2562,13 +2562,15 @@ body {
   align-items: center;
   gap: 1.6rem;
   opacity: 0;
-  transform: scale(0.85);
-  transition: all 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform: scale(0.92);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
 }
 
 .blackout-content.is-visible {
   opacity: 1;
   transform: scale(1);
+  pointer-events: all;
 }
 
 .turn-on-light-btn {
@@ -2626,19 +2628,17 @@ body {
   75% { transform: rotate(8deg); }
 }
 
-/* Smooth Reveal Animation for the Letter and CTA */
+/* Clean, Flicker-Free Reveal for the Message */
 .celebration-reveal-box {
   width: 100%;
-  animation: letterRevealDrop 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation: letterRevealFade 0.45s ease-out forwards;
 }
 
-@keyframes letterRevealDrop {
+@keyframes letterRevealFade {
   0% {
     opacity: 0;
-    transform: translateY(30px) scale(0.96);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
   }
 }

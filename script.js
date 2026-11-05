@@ -299,19 +299,17 @@ function toggleCandle() {
     const blackoutContent = document.getElementById("blackout-content");
 
     if (blackout) {
-      blackout.style.display = "flex";
-      blackout.classList.remove("is-active");
       if (blackoutContent) blackoutContent.classList.remove("is-visible");
-      void blackout.offsetWidth;
+      blackout.style.display = "flex";
       blackout.classList.add("is-active");
 
-      // In the dark, reveal the glowing "Turn On Light" button after 5 seconds (5000ms)
+      // In the dark, reveal the glowing "Turn On Light" button after 2 seconds (2000ms)
       if (blackoutTimer) clearTimeout(blackoutTimer);
       blackoutTimer = setTimeout(() => {
         if (blackoutContent) {
           blackoutContent.classList.add("is-visible");
         }
-      }, 5000);
+      }, 2000);
     }
   } else {
     candleExtinguished = false;
@@ -325,10 +323,10 @@ function toggleCandle() {
 const turnOnLightBtn = document.getElementById("turn-on-light-btn");
 if (turnOnLightBtn) {
   turnOnLightBtn.addEventListener("click", () => {
-    // Play light switch click sound immediately
+    // 1. Play light switch click sound immediately
     playLightSwitchSound();
 
-    // Instantly dismiss blackout overlay (zero lag/delay)
+    // 2. Instantly dismiss blackout overlay (zero lag/delay)
     const blackout = document.getElementById("blackout-overlay");
     const blackoutContent = document.getElementById("blackout-content");
     if (blackoutContent) blackoutContent.classList.remove("is-visible");
@@ -337,11 +335,10 @@ if (turnOnLightBtn) {
       blackout.style.display = "none";
     }
 
-    // Immediately reveal heartfelt message on the bright card
+    // 3. Immediately reveal heartfelt message on the bright card (no jittery scrolling)
     const revealBox = document.getElementById("celebration-reveal-box");
     if (revealBox) {
       revealBox.style.display = "block";
-      revealBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
 
     const instructionSubtitle = document.getElementById("cake-instruction-subtitle");
@@ -349,7 +346,7 @@ if (turnOnLightBtn) {
       instructionSubtitle.textContent = "Lights are on & your twenties are shining bright, Queen! ✨💕";
     }
 
-    // Immediate celebration audio & confetti burst
+    // 4. Immediate celebration audio & confetti burst
     playSparkleChime();
     triggerCelebrationConfetti(120);
     showToast("💡 Lights on! Happy 20th Birthday, Sandhiya! ✨❤️");
